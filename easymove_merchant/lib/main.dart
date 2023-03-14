@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:easymove_merchant/pages/menu_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -14,27 +15,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: const Text("Merchant"),
-      ),
-      body: const Text("New Start") // This trailing comma makes auto-formatting nicer for build methods.
+      home: const MenuPage(),
     );
   }
 }
