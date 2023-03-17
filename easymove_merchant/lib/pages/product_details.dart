@@ -1,21 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:product_list/product_listing.dart';
-
-void main() {
-  runApp(const ProductDetails());
-}
-
-class ProductDetails extends StatelessWidget {
-  const ProductDetails({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Product Details',
-      home: const MyProductDetails(),
-    );
-  }
-}
+import 'package:easymove_merchant/pages/menu_page.dart';
 
 class MyProductDetails extends StatefulWidget {
   const MyProductDetails({super.key});
@@ -46,7 +30,7 @@ class _MyProductDetails extends State<MyProductDetails> {
           ),
           onPressed: (() {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const productPage()));
+                MaterialPageRoute(builder: (context) => const MenuPage()));
           }),
         ),
         actions: [

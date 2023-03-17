@@ -4,13 +4,14 @@ class MyAppBar extends StatefulWidget implements PreferredSizeWidget {
   const MyAppBar({Key? key, required this.title, required this.width})
       : super(key: key);
   final String title;
+  final double height = 90;
   final double width;
 
   @override
   State<MyAppBar> createState() => MyAppBarState();
 
   @override
-  Size get preferredSize => Size(width, 64);
+  Size get preferredSize => Size(width, height);
 }
 
 class MyAppBarState extends State<MyAppBar> {
@@ -29,7 +30,7 @@ class MyAppBarState extends State<MyAppBar> {
   @override
   Widget build(BuildContext context) {
     return PreferredSize(
-      preferredSize: const Size.fromHeight(64),
+      preferredSize: Size.fromHeight(widget.height),
       child: Container(
         color: Colors.white,
         child: Column(
@@ -43,7 +44,7 @@ class MyAppBarState extends State<MyAppBar> {
                   style: titleStyle,
                 )),
             Padding(
-              padding: const EdgeInsets.only(left: 20, bottom: 10),
+              padding: const EdgeInsets.only(left: 20, bottom: 30),
               child: Container(
                 decoration: const BoxDecoration(
                   color: Color(0xFF6FB7CE),
