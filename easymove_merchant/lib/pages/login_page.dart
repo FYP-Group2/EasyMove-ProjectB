@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:merchant/signup_page.dart';
-import 'package:merchant/home.dart';
+import 'package:easymove_merchant/pages/signup_page.dart';
+import 'package:easymove_merchant/pages/home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});

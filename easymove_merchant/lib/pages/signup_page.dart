@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'login_page.dart';
+import 'package:easymove_merchant/pages/login_page.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key, required this.title});
@@ -51,7 +51,7 @@ class _SignUpPageState extends State<SignUpPage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      backgroundColor: Color(0xFFFFF8F0),
+      backgroundColor: const Color(0xFFFFF8F0),
       body: Column(
         children: <Widget>[
           const Padding(

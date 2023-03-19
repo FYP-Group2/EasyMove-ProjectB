@@ -31,7 +31,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: customMaterialColor,
       ),
-      home: const LoginPage(),
+      home: const LoginPage(title: 'Login'),
     );
   }
 }
