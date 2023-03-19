@@ -89,34 +89,6 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
-                        }
-                        return null;
-                      },
-                    ),
-                  ),
-                  const SizedBox(height: 15.0),
-                  Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                        boxShadow: [
-                          BoxShadow(
-                              color: Colors.black.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 2)),
-                        ],
-                        borderRadius: BorderRadius.circular(10),
-                        color: Colors.white),
-                    child: TextFormField(
-                      controller: _scompanyController,
-                      decoration: const InputDecoration(
-                        label: Text("Email"),
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                      validator: (value) {
-                        if (value == null || value.isEmpty) {
                           return 'Company name required';
                         }
                         return null;
@@ -137,15 +109,15 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white),
                     child: TextFormField(
-                      controller: _scompanyController,
+                      controller: _semailController,
                       decoration: const InputDecoration(
-                        label: Text("Business Field"),
+                        label: Text("Email"),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(16),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Business field required';
+                          return 'Email required';
                         }
                         return null;
                       },
@@ -165,19 +137,76 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white),
                     child: TextFormField(
-                      controller: _scompanyController,
+                      controller: _sbusinessController,
                       decoration: const InputDecoration(
-                        label: Text("Mobile Number"),
+                        label: Text("Business Field"),
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(16),
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Business field required';
                         }
                         return null;
                       },
                     ),
+                  ),
+                  const SizedBox(height: 15.0),
+                  Row(
+                    children: <Widget>[
+                      Container(
+                        height: 60,
+                        width: 75,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 2))
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.black),
+                        child: const Center(
+                          child: Text(
+                            "+60",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ),
+                      const SizedBox(width: 15),
+                      Container(
+                        height: 60,
+                        width: 260,
+                        decoration: BoxDecoration(
+                            boxShadow: [
+                              BoxShadow(
+                                  color: Colors.black.withOpacity(0.5),
+                                  spreadRadius: 2,
+                                  blurRadius: 5,
+                                  offset: const Offset(0, 2))
+                            ],
+                            borderRadius: BorderRadius.circular(10),
+                            color: Colors.white),
+                        child: TextFormField(
+                          controller: _smobileController,
+                          decoration: const InputDecoration(
+                            label: Text("Mobile Number"),
+                            border: InputBorder.none,
+                            contentPadding: EdgeInsets.all(16),
+                          ),
+                          validator: (value) {
+                            if (value == null || value.isEmpty) {
+                              return 'Mobile no. required';
+                            }
+                            return null;
+                          },
+                        ),
+                      )
+                    ],
                   ),
                   const SizedBox(height: 15.0),
                   Container(
@@ -263,7 +292,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white),
                     child: TextFormField(
-                      controller: _scompanyController,
+                      controller: _saddressController,
                       decoration: const InputDecoration(
                         label: Text("Company Address"),
                         border: InputBorder.none,
@@ -271,7 +300,7 @@ class _SignUpPageState extends State<SignUpPage> {
                       ),
                       validator: (value) {
                         if (value == null || value.isEmpty) {
-                          return 'Please enter your name';
+                          return 'Company address required';
                         }
                         return null;
                       },

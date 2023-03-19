@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/signup_page.dart';
-import 'package:easymove_merchant/pages/home_page.dart';
+import 'package:easymove_merchant/pages/menu_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
@@ -90,7 +90,7 @@ class _LoginPageState extends State<LoginPage> {
                               borderRadius: BorderRadius.circular(10),
                               color: Colors.white),
                           child: TextFormField(
-                            controller: _lemailController,
+                            controller: _lpasswordController,
                             decoration: const InputDecoration(
                                 label: Text("Password"),
                                 border: InputBorder.none,
@@ -251,8 +251,7 @@ class _LoginPageState extends State<LoginPage> {
                                 Navigator.push(
                                   context,
                                   MaterialPageRoute(
-                                      builder: (context) =>
-                                          const HomePage(title: "Home")),
+                                      builder: (context) => const MenuPage()),
                                 );
                               },
                               style: ButtonStyle(
