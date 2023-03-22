@@ -1,5 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:easymove_merchant/pages/menu_page.dart';
+import 'package:easymove_merchant/pages/product_listing.dart';
+import 'package:easymove_merchant/pages/count_cart.dart';
+
+void main() {
+  runApp(const ProductDetails());
+}
+
+class ProductDetails extends StatelessWidget {
+  const ProductDetails({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialApp(
+      title: 'Product Details',
+      home: const MyProductDetails(),
+    );
+  }
+}
 
 class MyProductDetails extends StatefulWidget {
   const MyProductDetails({super.key});
@@ -30,7 +47,7 @@ class _MyProductDetails extends State<MyProductDetails> {
           ),
           onPressed: (() {
             Navigator.push(context,
-                MaterialPageRoute(builder: (context) => const MenuPage()));
+                MaterialPageRoute(builder: (context) => const productPage()));
           }),
         ),
         actions: [
@@ -56,7 +73,7 @@ class _MyProductDetails extends State<MyProductDetails> {
                 width: double.infinity,
                 decoration: BoxDecoration(
                   image: DecorationImage(
-                    image: AssetImage('assets/Nasi_Goreng_Kampung.jpg'),
+                    image: AssetImage('assets/images/Nasi_Goreng_Kampung.jpg'),
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -125,27 +142,26 @@ class _MyProductDetails extends State<MyProductDetails> {
                     alignment: Alignment.bottomCenter,
                     height: 50,
                     width: double.infinity,
-                    padding:
-                        const EdgeInsets.symmetric(vertical: 5, horizontal: 1),
                     decoration: BoxDecoration(
                       color: Color.fromRGBO(176, 154, 115, 0.841),
                       borderRadius: BorderRadius.all(Radius.circular(20)),
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 10),
-                      child: Text(
+                    // child: Padding(
+                    //padding: EdgeInsets.only(top: 10, bottom: 10),
+                    child:
+                        MyCartCount(), /*Text(
                         'ADD TO CART',
                         style: TextStyle(
                             color: Colors.white,
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
-                      ),
-                    ),
+                      ),*/
                   ),
                 ),
               ),
             ),
+            //),
           ],
         ),
       ),
