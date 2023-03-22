@@ -47,17 +47,21 @@ class _SignUpPageState extends State<SignUpPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.title),
       ),
       backgroundColor: const Color(0xFFFFF8F0),
-      body: Column(
+      body: Center(
+          child: SingleChildScrollView(
+              child: Column(
         children: <Widget>[
           const Padding(
             padding: EdgeInsets.only(top: 20.0, right: 30.0, left: 30.0),
             child: Text(
-              'Welcome to EasyMove Merchant app! Fill in the details below to sign-up an account.',
+              'Apply a merchant account to get our delivery services.',
               style: TextStyle(fontSize: 18, color: Colors.black),
             ),
           ),
@@ -156,7 +160,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     children: <Widget>[
                       Container(
                         height: 60,
-                        width: 75,
+                        width: 70,
                         decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -177,10 +181,10 @@ class _SignUpPageState extends State<SignUpPage> {
                           ),
                         ),
                       ),
-                      const SizedBox(width: 15),
+                      const SizedBox(width: 10),
                       Container(
                         height: 60,
-                        width: 260,
+                        width: screenWidth - 140,
                         decoration: BoxDecoration(
                             boxShadow: [
                               BoxShadow(
@@ -272,7 +276,7 @@ class _SignUpPageState extends State<SignUpPage> {
                         });
                       },
                       decoration: const InputDecoration(
-                        hintText: 'Region',
+                        hintText: 'Zone',
                         border: InputBorder.none,
                         contentPadding: EdgeInsets.all(16),
                       ),
@@ -307,17 +311,16 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(
-                        top: 20.0, right: 30.0, left: 30.0),
+                    padding: const EdgeInsets.only(top: 20.0),
                     child: Row(
-                      children: const <Widget>[
+                      children: <Widget>[
                         Icon(
                           Icons.check_box_outline_blank_rounded,
                           size: 30,
                         ),
                         SizedBox(width: 10),
                         SizedBox(
-                          width: 250,
+                          width: screenWidth - 100,
                           height: 40,
                           child: Text(
                             "I agree to the Privacy Policy, Terms and Conditions.",
@@ -328,39 +331,43 @@ class _SignUpPageState extends State<SignUpPage> {
                     ),
                   ),
                   const SizedBox(height: 18.0),
-                  ElevatedButton(
-                    onPressed: () async {
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                const LoginPage(title: "Login")),
-                      );
-                    },
-                    style: ButtonStyle(
-                      minimumSize:
-                          MaterialStateProperty.all(const Size(165, 40)),
-                      shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-                        RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 20.0),
+                    child: ElevatedButton(
+                      onPressed: () async {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  const LoginPage(title: "Login")),
+                        );
+                      },
+                      style: ButtonStyle(
+                        minimumSize: MaterialStateProperty.all(
+                            Size(screenWidth - 60, 40)),
+                        shape:
+                            MaterialStateProperty.all<RoundedRectangleBorder>(
+                          RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         ),
+                        elevation: MaterialStateProperty.all<double>(8),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            const Color(0xFFB09A73)),
                       ),
-                      elevation: MaterialStateProperty.all<double>(8),
-                      backgroundColor: MaterialStateProperty.all<Color>(
-                          const Color(0xFFB09A73)),
+                      child: const Text(
+                        "Submit",
+                        style: TextStyle(
+                            fontSize: 15, fontWeight: FontWeight.bold),
+                      ),
                     ),
-                    child: const Text(
-                      "Submit",
-                      style:
-                          TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
-                    ),
-                  ),
+                  )
                 ],
               ),
             ),
           ),
         ],
-      ),
+      ))),
     );
   }
 }

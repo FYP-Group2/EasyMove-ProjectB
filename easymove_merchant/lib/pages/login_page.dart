@@ -26,11 +26,14 @@ class _LoginPageState extends State<LoginPage> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+
     return Stack(
       children: [
         Scaffold(
           backgroundColor: Theme.of(context).primaryColor,
           body: Center(
+              child: SingleChildScrollView(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -105,7 +108,7 @@ class _LoginPageState extends State<LoginPage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 10.0, left: 250.0),
+                        padding: const EdgeInsets.only(top: 10.0, right: 30.0),
                         child: GestureDetector(
                           onTap: () async {
                             showModalBottomSheet(
@@ -124,9 +127,10 @@ class _LoginPageState extends State<LoginPage> {
                                         const Text(
                                           "Forgot Password",
                                           style: TextStyle(
-                                              fontSize: 35,
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.black),
+                                            fontSize: 35,
+                                            fontWeight: FontWeight.bold,
+                                            color: Colors.black,
+                                          ),
                                         ),
                                         const Padding(
                                           padding: EdgeInsets.only(top: 15.0),
@@ -233,6 +237,7 @@ class _LoginPageState extends State<LoginPage> {
                           },
                           child: const Text(
                             "Forgot Password?",
+                            textAlign: TextAlign.right,
                             style: TextStyle(
                                 decoration: TextDecoration.underline,
                                 fontSize: 15,
@@ -256,7 +261,7 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(
-                                    const Size(165, 40)),
+                                    Size(screenWidth - 246, 40)),
                                 shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
@@ -285,13 +290,14 @@ class _LoginPageState extends State<LoginPage> {
                               },
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(
-                                    const Size(165, 40)),
+                                    Size(screenWidth - 246, 40)),
                                 shape: MaterialStateProperty.all<
                                         RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                         borderRadius:
                                             BorderRadius.circular(10.0))),
-                                elevation: MaterialStateProperty.all<double>(8),
+                                elevation:
+                                    MaterialStateProperty.all<double>(8.0),
                                 backgroundColor:
                                     MaterialStateProperty.all<Color>(
                                         const Color(0xFFB09A73)),
@@ -310,7 +316,7 @@ class _LoginPageState extends State<LoginPage> {
                 )
               ],
             ),
-          ),
+          )),
         )
       ],
     );
