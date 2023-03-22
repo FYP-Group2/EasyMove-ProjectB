@@ -27,10 +27,12 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Stack(
       children: [
         Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: Theme.of(context).primaryColor,
           body: Center(
               child: SingleChildScrollView(
@@ -112,10 +114,12 @@ class _LoginPageState extends State<LoginPage> {
                         child: GestureDetector(
                           onTap: () async {
                             showModalBottomSheet(
+                                isScrollControlled: true,
                                 context: context,
                                 builder: (BuildContext context) {
-                                  return Container(
-                                    height: 500,
+                                  return SingleChildScrollView(
+                                      child: Container(
+                                    height: 450,
                                     color: Colors.white,
                                     child: Column(
                                       mainAxisAlignment:
@@ -133,12 +137,14 @@ class _LoginPageState extends State<LoginPage> {
                                           ),
                                         ),
                                         const Padding(
-                                          padding: EdgeInsets.only(top: 15.0),
+                                          padding: EdgeInsets.only(
+                                              top: 10.0,
+                                              left: 30.0,
+                                              right: 30.0),
                                           child: SizedBox(
-                                            width: 320,
                                             height: 40,
                                             child: Text(
-                                              "Enter your email which is linked to your account to receive the link to reset password.",
+                                              "A reset password link will send to the registered email.",
                                               style: TextStyle(
                                                   fontSize: 15,
                                                   color: Colors.black),
@@ -148,7 +154,7 @@ class _LoginPageState extends State<LoginPage> {
                                         const SizedBox(height: 20.0),
                                         Padding(
                                           padding: const EdgeInsets.only(
-                                              top: 20.0,
+                                              top: 10.0,
                                               right: 30.0,
                                               left: 30.0),
                                           child: Container(
@@ -232,7 +238,7 @@ class _LoginPageState extends State<LoginPage> {
                                         ),
                                       ],
                                     ),
-                                  );
+                                  ));
                                 });
                           },
                           child: const Text(
