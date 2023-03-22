@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
 import 'package:easymove_merchant/pages/small_count_cart.dart';
+import 'package:easymove_merchant/pages/each_category_list.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/my_app_bar.dart';
 import 'package:easymove_merchant/models/product.dart';
@@ -325,20 +326,31 @@ class _ProductListState extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
-                    child: Row(children: [
-                      Text(
-                        categories[index].name,
-                        style: TextStyle(
-                          fontSize: 20.0,
-                          fontWeight: FontWeight.bold,
-                        ),
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
+                  padding:
+                      EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                  child: Row(children: [
+                    Text(
+                      categories[index].name,
+                      style: TextStyle(
+                        fontSize: 20.0,
+                        fontWeight: FontWeight.bold,
                       ),
-                      Icon(Icons.arrow_right_alt)
-                    ])),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                    IconButton(
+                      icon: new Icon(Icons.arrow_right_alt),
+                      onPressed: () {
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => categoryList(),
+                          ),
+                        );
+                      },
+                    ),
+                  ]),
+                ),
                 SizedBox(
                   height: 320.0,
                   child: ListView.builder(
