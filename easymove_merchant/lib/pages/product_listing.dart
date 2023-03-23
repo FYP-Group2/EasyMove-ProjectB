@@ -384,8 +384,45 @@ class _ProductListState extends StatelessWidget {
                   height: 320.0,
                   child: ListView.builder(
                       scrollDirection: Axis.horizontal,
-                      itemCount: categories[index].products.length,
+                      itemCount: categories[index].products.length +
+                          (categories[index].products.length >= 3 ? 1 : 0),
                       itemBuilder: (context, index2) {
+                        if (index2 == categories[index].products.length) {
+                          return InkWell(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => categoryList(),
+                                ),
+                              );
+                            },
+                            child: Padding(
+                              padding: EdgeInsets.only(right: 10),
+                              child: Container(
+                                height: 200,
+                                width: 180,
+                                margin: EdgeInsets.all(5),
+                                decoration: BoxDecoration(
+                                  boxShadow: [
+                                    BoxShadow(
+                                        blurRadius: 3, color: Colors.black)
+                                  ],
+                                  color: Colors.white,
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: const Center(
+                                  child: Text(
+                                    'View More...',
+                                    style: TextStyle(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold),
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        }
                         return Container(
                           width: 180.0,
                           margin: EdgeInsets.symmetric(horizontal: 8.0),
