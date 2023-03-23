@@ -1,55 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
-import 'package:easymove_merchant/pages/small_count_cart.dart';
+import 'package:easymove_merchant/components/small_count_cart.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
-
-class Product {
-  String title;
-  String image;
-  String type;
-  double price;
-
-  Product(
-      {required this.title,
-      required this.image,
-      required this.type,
-      required this.price});
-}
-
-class Category {
-  String name;
-  List<Product> products;
-
-  Category({required this.name, required this.products});
-}
+import 'package:easymove_merchant/models/product.dart';
+import 'package:easymove_merchant/models/category.dart';
 
 List<Category> categories = [
   Category(
     name: 'Goreng',
     products: [
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -58,28 +40,28 @@ List<Category> categories = [
     name: 'Western',
     products: [
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -88,28 +70,28 @@ List<Category> categories = [
     name: 'Fast Food',
     products: [
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -214,7 +196,7 @@ class _MyCategoryList extends State<MyCategoryList> {
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
                                     child: Image.asset(
-                                      categories[1].products[index].image,
+                                      categories[1].products[index].imageSource,
                                       fit: BoxFit.fill,
                                     ),
                                   ),
@@ -227,7 +209,7 @@ class _MyCategoryList extends State<MyCategoryList> {
                                 padding:
                                     const EdgeInsets.fromLTRB(25, 10, 25, 15),
                                 child: Text(
-                                  categories[1].products[index].title,
+                                  categories[1].products[index].name,
                                   style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
@@ -274,7 +256,7 @@ class _MyCategoryList extends State<MyCategoryList> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(20)),
                                     ),
-                                    child: SmallCartCount(),
+                                    child: SmallCartCount(product: categories[1].products[index]),
                                   ),
                                 ),
                               ),

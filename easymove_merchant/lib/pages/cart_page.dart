@@ -3,6 +3,7 @@ import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/my_app_bar.dart';
 import 'package:easymove_merchant/models/cart.dart';
 import 'package:easymove_merchant/models/product.dart';
+import 'package:easymove_merchant/pages/cart_checkout_page.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
 
@@ -16,27 +17,11 @@ class CartPage extends StatefulWidget {
 class CartState extends State<CartPage> {
   final int imageWidth = 80;
   final int imageHeight = 80;
-  double totalPrice = 0;
 
   Cart myCart = Cart();
 
-  void calculateTotalPrice() {
-    totalPrice = 0;
-    for (Product p in myCart.products) {
-      totalPrice += p.price * myCart.productsAmount[p.name]!;
-    }
-  }
-
   void reload() {
-    setState(() {
-      calculateTotalPrice();
-    });
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    calculateTotalPrice();
+    setState(() {});
   }
 
   @override
@@ -126,11 +111,10 @@ class CartState extends State<CartPage> {
                                   onPressed: () {
                                     setState(() {
                                       bool needReload =
-                                          myCart.removeProduct(index);
+                                          myCart.removeProductByIndex(index);
                                       if (needReload) {
                                         reload();
                                       }
-                                      calculateTotalPrice();
                                     });
                                   },
                                   icon: const Icon(
@@ -143,7 +127,6 @@ class CartState extends State<CartPage> {
                                   onPressed: () {
                                     setState(() {
                                       myCart.addProduct(myCart.products[index]);
-                                      calculateTotalPrice();
                                     });
                                   },
                                   icon: const Icon(
@@ -155,7 +138,7 @@ class CartState extends State<CartPage> {
                         ],
                       ),
                     ),
-                    //})),
+                    // })),
                   ],
                 );
               },
@@ -197,7 +180,7 @@ class CartState extends State<CartPage> {
                   Padding(
                       padding: const EdgeInsets.only(right: 40, top: 20),
                       child: Text(
-                        "RM${totalPrice.toStringAsFixed(2)}",
+                        "RM${myCart.getTotalPrice().toStringAsFixed(2)}",
                         style: const TextStyle(
                             fontSize: 22, fontWeight: FontWeight.bold),
                       )),
@@ -208,7 +191,13 @@ class CartState extends State<CartPage> {
                   child: SizedBox(
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      const CartCheckoutPage()));
+                        },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB09A73),
                           shape: RoundedRectangleBorder(
@@ -219,7 +208,9 @@ class CartState extends State<CartPage> {
                         child: const Text(
                           "CHECKOUT",
                           style: TextStyle(
-                              color: Colors.white, fontWeight: FontWeight.bold),
+                              color: Colors.white,
+                              fontSize: 18,
+                              fontWeight: FontWeight.bold),
                         ),
                       ))),
             ]),

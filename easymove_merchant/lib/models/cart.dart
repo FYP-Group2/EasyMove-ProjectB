@@ -22,8 +22,16 @@ class Cart {
     }
   }
 
+  void removeProduct(Product product){
+    if(productsAmount[product.name]! > 1){
+      productsAmount[product.name] = productsAmount[product.name]! - 1;
+    }else {
+      productsAmount.remove(product.name);
+      products.remove(product);
+    }
+  }
 
-  bool removeProduct(int index){
+  bool removeProductByIndex(int index){
     bool needReload = false;
     if(productsAmount[products[index].name]! > 1){
       productsAmount[products[index].name] = productsAmount[products[index].name]! - 1;
@@ -34,6 +42,15 @@ class Cart {
     }
 
     return needReload;
+  }
+
+  double getTotalPrice(){
+    double totalPrice = 0;
+    for(var p in products){
+      totalPrice += productsAmount[p.name]! * p.price;
+    }
+
+    return totalPrice;
   }
 
   void clear(){

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
-import 'package:easymove_merchant/pages/small_count_cart.dart';
+import 'package:easymove_merchant/components/small_count_cart.dart';
 import 'package:easymove_merchant/pages/each_category_list.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/my_app_bar.dart';
@@ -12,53 +12,33 @@ import 'package:flutter/services.dart';
 import 'dart:convert';
 import 'package:image/image.dart' as IMG;
 
-class Product {
-  String title;
-  String image;
-  String type;
-  double price;
-
-  Product(
-      {required this.title,
-      required this.image,
-      required this.type,
-      required this.price});
-}
-
-class Category {
-  String name;
-  List<Product> products;
-
-  Category({required this.name, required this.products});
-}
-
 List<Category> categories = [
   Category(
     name: 'Goreng',
     products: [
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Nasi Goreng Kampung',
-          image: 'assets/images/Nasi_Goreng_Kampung.jpg',
+          name: 'Nasi Goreng Kampung',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -67,28 +47,28 @@ List<Category> categories = [
     name: 'Western',
     products: [
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -97,28 +77,28 @@ List<Category> categories = [
     name: 'Fast Food',
     products: [
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
-          title: 'Big Mac',
-          image: 'assets/images/burger.png',
+          name: 'Big Mac',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -290,34 +270,83 @@ class _ProductListState extends StatelessWidget {
           ),
         ),
       ),
-      appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black),
-        actions: [
-          Builder(
-            builder: (context) => IconButton(
-              icon: Icon(Icons.menu_book),
-              onPressed: () => Scaffold.of(context).openEndDrawer(),
-              tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      appBar: PreferredSize(
+        preferredSize: const Size.fromHeight(90),
+        child:
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                    padding: EdgeInsets.only(bottom: 4, left: 20),
+                    child: Text(
+                      "Menu",
+                      style: TextStyle(fontSize: 28),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 30),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF6FB7CE),
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(111, 199, 206, 0.7),
+                            offset: Offset(-2, 4),
+                            spreadRadius: 2,
+                            blurRadius: 5),
+                      ],
+                    ),
+                    width: 50,
+                    height: 5,
+                  ),
+                ),
+              ],
             ),
           ),
-        ],
-        elevation: 0,
-        backgroundColor: Colors.transparent,
-        title: const Padding(
-          padding: EdgeInsets.only(top: 20, bottom: 20),
-          child: Text(
-            'Menu',
-            style: TextStyle(
-              fontSize: 30,
-              color: Colors.transparent,
-              decoration: TextDecoration.underline,
-              decorationThickness: 3.00,
-              decorationColor: Colors.lightBlue,
-              shadows: [Shadow(color: Colors.black, offset: Offset(0, -5))],
-            ), //set the text color and give underline to the text
+          Builder(
+            builder: ((context) => Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: IconButton(
+                  icon: const Icon(Icons.menu_book),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                ))),
           ),
-        ),
+        ]),
       ),
+      // AppBar(
+      //   iconTheme: IconThemeData(color: Colors.black),
+      //   actions: [
+      //     Builder(
+      //       builder: (context) => IconButton(
+      //         icon: Icon(Icons.menu_book),
+      //         onPressed: () => Scaffold.of(context).openEndDrawer(),
+      //         tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+      //       ),
+      //     ),
+      //   ],
+      //   elevation: 0,
+      //   backgroundColor: Colors.transparent,
+      //   title: const Padding(
+      //     padding: EdgeInsets.only(top: 20, bottom: 20),
+      //     child: Text(
+      //       'Menu',
+      //       style: TextStyle(
+      //         fontSize: 30,
+      //         color: Colors.transparent,
+      //         decoration: TextDecoration.underline,
+      //         decorationThickness: 3.00,
+      //         decorationColor: Colors.lightBlue,
+      //         shadows: [Shadow(color: Colors.black, offset: Offset(0, -5))],
+      //       ), //set the text color and give underline to the text
+      //     ),
+      //   ),
+      // ),
       body: ListView.builder(
         itemCount: categories.length,
         itemBuilder: ((context, index) {
@@ -339,7 +368,7 @@ class _ProductListState extends StatelessWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     IconButton(
-                      icon: new Icon(Icons.arrow_right_alt),
+                      icon: const Icon(Icons.arrow_right_alt),
                       onPressed: () {
                         Navigator.push(
                           context,
@@ -400,7 +429,7 @@ class _ProductListState extends StatelessWidget {
                                           child: Image.asset(
                                             categories[index]
                                                 .products[index2]
-                                                .image,
+                                                .imageSource,
                                             fit: BoxFit.fill,
                                           ),
                                         ),
@@ -413,9 +442,7 @@ class _ProductListState extends StatelessWidget {
                                       padding: const EdgeInsets.fromLTRB(
                                           25, 10, 25, 15),
                                       child: Text(
-                                        categories[index]
-                                            .products[index2]
-                                            .title,
+                                        categories[index].products[index2].name,
                                         style: const TextStyle(
                                             fontSize: 18.0,
                                             fontWeight: FontWeight.bold),
@@ -465,7 +492,10 @@ class _ProductListState extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20)),
                                           ),
-                                          child: SmallCartCount(),
+                                          child: SmallCartCount(
+                                            product: categories[index]
+                                                .products[index2],
+                                          ),
                                         ),
                                       ),
                                     ),

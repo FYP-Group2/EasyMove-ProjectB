@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:easymove_merchant/pages/menu_page.dart';
+import 'package:easymove_merchant/pages/product_listing.dart';
 import 'package:easymove_merchant/pages/cart_page.dart';
 
 class MyBottomNavigationBar extends StatefulWidget {
@@ -49,7 +49,7 @@ class MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MenuPage()));
+                              builder: (context) => const productPage()));
                       break;
                     case 1:
                       Navigator.push(

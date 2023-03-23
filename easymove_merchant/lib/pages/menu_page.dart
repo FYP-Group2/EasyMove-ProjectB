@@ -15,27 +15,27 @@ List<Category> categories = [
     products: [
       Product(
           name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/Nasi_Goreng_Kampung.jpg',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/Nasi_Goreng_Kampung.jpg',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/Nasi_Goreng_Kampung.jpg',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/Nasi_Goreng_Kampung.jpg',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/Nasi_Goreng_Kampung.jpg',
+          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -45,27 +45,27 @@ List<Category> categories = [
     products: [
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
@@ -75,27 +75,27 @@ List<Category> categories = [
     products: [
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
       Product(
           name: 'Big Mac',
-          imageSource: 'assets/burger.png',
+          imageSource: 'assets/images/burger.png',
           type: 'Ala Carte',
           price: 15.90),
     ],
