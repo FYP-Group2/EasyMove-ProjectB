@@ -1,24 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:easymove_merchant/models/cart.dart';
+import 'package:easymove_merchant/models/product.dart';
 
-class MyCartCount extends StatefulWidget {
-  const MyCartCount({super.key});
+class CartCount extends StatefulWidget {
+  CartCount({super.key, required this.product});
+
+  Product product;
 
   @override
-  State<MyCartCount> createState() => _MyCartCountState();
+  State<CartCount> createState() => _CartCountState();
 }
 
-class _MyCartCountState extends State<MyCartCount> {
+class _CartCountState extends State<CartCount> {
   int _counter = 0;
   bool add_amount = false;
+  Cart myCart = Cart();
+
+  @override
+  void initState() {
+    super.initState();
+    if (myCart.productsAmount.containsKey(widget.product.name)) {
+      _counter = myCart.productsAmount[widget.product.name]!;
+    }
+  }
 
   void _increaseCounter() {
     setState(() {
+      myCart.addProduct(widget.product);
       _counter++;
     });
   }
 
   void _decreaseCounter() {
     setState(() {
+      myCart.removeProduct(widget.product);
       _counter--;
     });
   }
@@ -30,49 +45,56 @@ class _MyCartCountState extends State<MyCartCount> {
             height: double.infinity,
             child: Row(
               children: [
-                TextButton(
-                  onPressed: _decreaseCounter,
-                  child: Container(
-                    width: 10,
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 0, right: 0),
-                      child: Icon(
-                        Icons.remove,
-                        color: Colors.white,
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: TextButton(
+                    onPressed: _decreaseCounter,
+                    child: Padding(
+                      padding: EdgeInsets.only(top: 0, bottom: 0),
+                      child: Container(
+                        child: Icon(
+                          Icons.remove,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
                 ),
-                Container(
-                  color: Colors.white,
-                  height: double.infinity,
-                  width: 220,
-                  alignment: Alignment.center,
-                  child: Padding(
-                      padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
-                      child: Center(
-                        child: FittedBox(
-                          child: Text(
-                            '$_counter',
-                            style: const TextStyle(
-                                color: Colors.black,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
-                            maxLines: 1,
-                            overflow: TextOverflow.ellipsis,
-                          ),
-                        ),
-                      )),
-                ),
-                TextButton(
-                  onPressed: _increaseCounter,
+                Flexible(
+                  fit: FlexFit.tight,
                   child: Container(
-                    width: 10,
-                    child: const Padding(
-                      padding: EdgeInsets.only(left: 0, right: 0),
-                      child: Icon(
-                        Icons.add,
-                        color: Colors.white,
+                    color: Colors.white,
+                    height: double.infinity,
+                    alignment: Alignment.center,
+                    child: Padding(
+                        padding: const EdgeInsets.fromLTRB(0, 10, 0, 10),
+                        child: Center(
+                          child: FittedBox(
+                            child: Text(
+                              '$_counter',
+                              style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold),
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          ),
+                        )),
+                  ),
+                ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: TextButton(
+                    onPressed: _increaseCounter,
+                    child: Container(
+                      height: double.infinity,
+                      child: const Padding(
+                        padding: EdgeInsets.only(left: 0, right: 0),
+                        child: Icon(
+                          Icons.add,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ),
@@ -93,7 +115,7 @@ class _MyCartCountState extends State<MyCartCount> {
                   'ADD TO CART',
                   style: TextStyle(
                       color: Colors.white,
-                      fontSize: 18.0,
+                      fontSize: 12.0,
                       fontWeight: FontWeight.bold),
                   textAlign: TextAlign.center,
                 ),
