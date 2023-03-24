@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
-import 'package:easymove_merchant/components/small_count_cart.dart';
+import 'package:easymove_merchant/components/count_cart.dart';
+import 'package:easymove_merchant/components/count_cart.dart';
 import 'package:easymove_merchant/pages/each_category_list.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/my_app_bar.dart';
@@ -529,7 +530,7 @@ class _ProductListState extends StatelessWidget {
                                             borderRadius: BorderRadius.all(
                                                 Radius.circular(20)),
                                           ),
-                                          child: SmallCartCount(
+                                          child: CartCount(
                                             product: categories[index]
                                                 .products[index2],
                                           ),

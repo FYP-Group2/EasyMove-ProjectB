@@ -148,8 +148,9 @@ class _MyProductDetails extends State<MyProductDetails> {
                     ),
                     // child: Padding(
                     //padding: EdgeInsets.only(top: 10, bottom: 10),
-                    child:
-                        MyCartCount(), /*Text(
+                    child: CartCount(
+                        product: categories[1].products[
+                            0]), /*Text(
                         'ADD TO CART',
                         style: TextStyle(
                             color: Colors.white,

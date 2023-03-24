@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
-import 'package:easymove_merchant/components/small_count_cart.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
+import 'package:easymove_merchant/components/count_cart.dart';
 import 'package:easymove_merchant/models/product.dart';
 import 'package:easymove_merchant/models/category.dart';
 
@@ -256,7 +256,8 @@ class _MyCategoryList extends State<MyCategoryList> {
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(20)),
                                     ),
-                                    child: SmallCartCount(product: categories[1].products[index]),
+                                    child: CartCount(
+                                        product: categories[1].products[index]),
                                   ),
                                 ),
                               ),
