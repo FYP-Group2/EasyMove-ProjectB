@@ -1,10 +1,12 @@
+import 'package:easymove_merchant/models/merchant.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
+import 'package:easymove_merchant/services/my_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/signup_page.dart';
-import 'package:easymove_merchant/pages/menu_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -16,6 +18,22 @@ class _LoginPageState extends State<LoginPage> {
   final _lemailController = TextEditingController();
   final _lpasswordController = TextEditingController();
   final _remailController = TextEditingController();
+  Merchant merchant = Merchant();
+
+  Future<Map<String, dynamic>> merchantLogin(
+      String username, String password) async {
+    Map<String, dynamic> result = {"result": false};
+    final data = await MyApiService.merchantLogIn(username, password);
+    if (data["result"] == true) {
+      result["result"] = true;
+      print(data);
+      merchant.initializeMerchant(data["id"], data["region"], data["company"],
+          data["branch"], data["branch_location"], data["branch_location_coordinate"]);
+    } else {
+      result["message"] = data["message"];
+    }
+    return result;
+  }
 
   @override
   void dispose() {
@@ -28,7 +46,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
 
     return Stack(
       children: [
@@ -260,11 +277,42 @@ class _LoginPageState extends State<LoginPage> {
                           children: <Widget>[
                             ElevatedButton(
                               onPressed: () async {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                      builder: (context) => const productPage()),
-                                );
+                                await merchantLogin(_lemailController.text,
+                                        _lpasswordController.text)
+                                    .then((result) {
+                                  if (result["result"] == true) {
+                                    Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const productPage()),
+                                    );
+                                  }else{
+                                    showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return AlertDialog(
+                                              shape: RoundedRectangleBorder(
+                                                  borderRadius: BorderRadius.circular(8)),
+                                              title: const Text("Login failed"), //myAlertBoxTitle(action),
+                                              content: Text("${result["message"]}"),
+                                              actions: [
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop(false);
+                                                    setState(() {});
+                                                  },
+                                                  child: const Text(
+                                                    "Ok",
+                                                    style: TextStyle(
+                                                      fontSize: 20,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ]);
+                                        });
+                                  }
+                                });
                               },
                               style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(

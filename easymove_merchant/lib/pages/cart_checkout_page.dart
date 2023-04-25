@@ -2,8 +2,10 @@ import 'package:easymove_merchant/components/my_app_bar.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/delivery_details_input.dart';
 import 'package:easymove_merchant/components/delivery_details_input_title.dart';
+import 'package:easymove_merchant/components/my_drop_down.dart';
 import 'package:easymove_merchant/components/trip_table.dart';
 import 'package:easymove_merchant/models/cart.dart';
+import 'package:easymove_merchant/services/my_api_service.dart';
 import 'package:flutter/material.dart';
 
 class CartCheckoutPage extends StatefulWidget {
@@ -21,10 +23,29 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
   final cPropertyController = TextEditingController();
   final collectController = TextEditingController();
   final deliveryController = TextEditingController();
-  final zoneController = TextEditingController();
-  final vehicleController = TextEditingController();
   final msgController = TextEditingController();
+  late MyDropDown zoneDropDown;
+  late MyDropDown vehicleDropDown;
+  late Map<String, int> zoneMap;
+  late Map<String, int> vehicleMap;
   Cart myCart = Cart();
+
+  Future<List<dynamic>> getZones() async{
+    List<dynamic> data = await MyApiService.getZones();
+    List<dynamic> zone = [];
+    Map<String, int> zoneMap = {};
+    for(var z in data){
+      zone.add(z["zone"]);
+      zoneMap.addAll({z["zone"]: z["id"]});
+    }
+    return zone;
+  }
+
+  Future<List<dynamic>> getVehicles() async{
+    List<dynamic> data = await MyApiService.getVehicles();
+    vehicleMap = data[0];
+    return data[1];
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,14 +69,56 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             DeliveryDetailsInput(textEditingController: destController),
             const DeliveryDetailsInputTitle(textTitle: "Customer Property No."),
             DeliveryDetailsInput(textEditingController: cPropertyController),
-            const DeliveryDetailsInputTitle(textTitle: "Collection TIme"),
+            const DeliveryDetailsInputTitle(textTitle: "Collection Time"),
             DeliveryDetailsInput(textEditingController: collectController),
-            const DeliveryDetailsInputTitle(textTitle: "Delivery TIme"),
+            const DeliveryDetailsInputTitle(textTitle: "Delivery Time"),
             DeliveryDetailsInput(textEditingController: deliveryController),
             const DeliveryDetailsInputTitle(textTitle: "Zone"),
-            DeliveryDetailsInput(textEditingController: zoneController),
-            const DeliveryDetailsInputTitle(textTitle: "Vehicle Requirement"),
-            DeliveryDetailsInput(textEditingController: vehicleController),
+            FutureBuilder(
+              future: getZones(),
+              builder: ((context, snapshot) {
+                if(snapshot.hasData) {
+                  zoneDropDown = MyDropDown(myList: snapshot.data!,);
+                  return zoneDropDown;
+                }else{
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 5, left: 30, right: 30, bottom: 25),
+                    child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: const Text("Loading..."),
+                    ),
+                  );
+                }
+              })
+            ),
+            const DeliveryDetailsInputTitle(textTitle: "Vehicle Requirements"),
+            FutureBuilder(
+                future: getVehicles(),
+                builder: ((context, snapshot) {
+                  if(snapshot.hasData) {
+                    vehicleDropDown = MyDropDown(myList: snapshot.data!,);
+                    return vehicleDropDown;
+                  }else{
+                    return Padding(
+                      padding: const EdgeInsets.only(top: 5, left: 30, right: 30, bottom: 25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: const Text("Loading..."),
+                      ),
+                    );
+                  }
+                })
+            ),
             const DeliveryDetailsInputTitle(textTitle: "Additional Message"),
             DeliveryDetailsInput(textEditingController: msgController),
             Padding(
@@ -187,7 +250,19 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: ElevatedButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            MyApiService.placeOrder(
+                                cNameController.text,
+                                phoneController.text,
+                                originController.text,
+                                destController.text,
+                                cPropertyController.text,
+                                collectController.text,
+                                deliveryController.text,
+                                zoneMap[zoneDropDown.selected]!,
+                                vehicleMap[vehicleDropDown.selected]!,
+                                msgController.text);
+                          },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFB09A73),
                             shape: RoundedRectangleBorder(

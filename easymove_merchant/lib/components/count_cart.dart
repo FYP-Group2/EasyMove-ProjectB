@@ -3,9 +3,9 @@ import 'package:easymove_merchant/models/cart.dart';
 import 'package:easymove_merchant/models/product.dart';
 
 class CartCount extends StatefulWidget {
-  CartCount({super.key, required this.product});
+  const CartCount({super.key, required this.product});
 
-  Product product;
+  final Product product;
 
   @override
   State<CartCount> createState() => _CartCountState();
@@ -41,7 +41,7 @@ class _CartCountState extends State<CartCount> {
   @override
   Widget build(BuildContext context) {
     return add_amount
-        ? Container(
+        ? SizedBox(
             height: double.infinity,
             child: Row(
               children: [
@@ -49,13 +49,11 @@ class _CartCountState extends State<CartCount> {
                   fit: FlexFit.tight,
                   child: TextButton(
                     onPressed: _decreaseCounter,
-                    child: Padding(
+                    child: const Padding(
                       padding: EdgeInsets.only(top: 0, bottom: 0),
-                      child: Container(
-                        child: Icon(
-                          Icons.remove,
-                          color: Colors.white,
-                        ),
+                      child: Icon(
+                        Icons.remove,
+                        color: Colors.white,
                       ),
                     ),
                   ),
@@ -87,9 +85,9 @@ class _CartCountState extends State<CartCount> {
                   fit: FlexFit.tight,
                   child: TextButton(
                     onPressed: _increaseCounter,
-                    child: Container(
+                    child: const SizedBox(
                       height: double.infinity,
-                      child: const Padding(
+                      child: Padding(
                         padding: EdgeInsets.only(left: 0, right: 0),
                         child: Icon(
                           Icons.add,
@@ -102,7 +100,7 @@ class _CartCountState extends State<CartCount> {
               ],
             ),
           )
-        : Container(
+        : SizedBox(
             height: double.infinity,
             child: TextButton(
               onPressed: () {

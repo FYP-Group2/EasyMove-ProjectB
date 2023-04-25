@@ -57,7 +57,7 @@ class MyAppBarState extends State<MyAppBar> {
                         blurRadius: 5),
                   ],
                 ),
-                width: getTextSize(widget.title, titleStyle).width * 0.8,
+                width: (getTextSize(widget.title, titleStyle).width * 0.7) > 70 ? 70 : getTextSize(widget.title, titleStyle).width * 0.7,
                 height: 5,
               ),
             ),

@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/my_app_bar.dart';
 import 'package:easymove_merchant/models/cart.dart';
-import 'package:easymove_merchant/models/product.dart';
 import 'package:easymove_merchant/pages/cart_checkout_page.dart';
 import 'package:flutter/services.dart';
 import 'dart:convert';
@@ -51,8 +50,8 @@ class CartState extends State<CartPage> {
                             child: ClipRRect(
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(20.0)),
-                              child: Image.asset(
-                                myCart.products[index].imageSource,
+                              child: Image.memory(
+                                base64Decode(myCart.products[index].imageSource),
                                 fit: BoxFit.fill,
                               ),
                               // child: Image.memory(
@@ -72,7 +71,7 @@ class CartState extends State<CartPage> {
                           Expanded(
                             child: Text(
                               myCart.products[index].name,
-                              style: const TextStyle(fontSize: 18),
+                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -81,7 +80,7 @@ class CartState extends State<CartPage> {
                             "RM${myCart.products[index].price.toStringAsFixed(2)}"
                             "/${myCart.productsAmount[myCart.products[index].name]}",
                             style: const TextStyle(
-                                fontSize: 16, color: Colors.grey),
+                                fontSize: 16, color: Color.fromRGBO(80, 80, 80, 1.0)),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),

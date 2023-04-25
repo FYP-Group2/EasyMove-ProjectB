@@ -1,120 +1,30 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_details.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
 import 'package:easymove_merchant/components/count_cart.dart';
-import 'package:easymove_merchant/models/product.dart';
 import 'package:easymove_merchant/models/category.dart';
 
-List<Category> categories = [
-  Category(
-    name: 'Goreng',
-    products: [
-      Product(
-          name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Nasi Goreng Kampung',
-          imageSource: 'assets/images/Nasi_Goreng_Kampung.jpg',
-          type: 'Ala Carte',
-          price: 15.90),
-    ],
-  ),
-  Category(
-    name: 'Western',
-    products: [
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-    ],
-  ),
-  Category(
-    name: 'Fast Food',
-    products: [
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-      Product(
-          name: 'Big Mac',
-          imageSource: 'assets/images/burger.png',
-          type: 'Ala Carte',
-          price: 15.90),
-    ],
-  ),
-];
-
-void main() {
-  runApp(const categoryList());
-}
-
-class categoryList extends StatelessWidget {
-  const categoryList({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: const MyCategoryList(),
-    );
-  }
-}
+// void main() {
+//   runApp(const categoryList());
+// }
+//
+// class categoryList extends StatelessWidget {
+//   const categoryList({super.key});
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return const MaterialApp(
+//       home: MyCategoryList(),
+//     );
+//   }
+// }
 
 class MyCategoryList extends StatefulWidget {
-  const MyCategoryList({super.key});
+  final Category category;
+
+  const MyCategoryList({super.key, required this.category});
 
   @override
   State<MyCategoryList> createState() => _MyCategoryList();
@@ -128,14 +38,14 @@ class _MyCategoryList extends State<MyCategoryList> {
         backgroundColor: Colors.transparent,
         elevation: 0,
         title: Text(
-          categories[1].name,
-          style: TextStyle(
+          widget.category.name,
+          style: const TextStyle(
             fontSize: 30,
             color: Colors.black,
           ),
         ),
         leading: IconButton(
-          icon: Icon(
+          icon: const Icon(
             Icons.arrow_back,
             color: Colors.black,
           ),
@@ -146,7 +56,7 @@ class _MyCategoryList extends State<MyCategoryList> {
         ),
       ),
       body: GridView.builder(
-        itemCount: categories[1].products.length,
+        itemCount: widget.category.allProducts.length,
         gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
           crossAxisCount: 2,
           childAspectRatio: MediaQuery.of(context).size.width /
@@ -158,7 +68,9 @@ class _MyCategoryList extends State<MyCategoryList> {
               Navigator.push(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => MyProductDetails(),
+                  builder: (context) => MyProductDetails(
+                      product:
+                          widget.category.allProducts[index]),
                 ),
               );
             },
@@ -172,10 +84,14 @@ class _MyCategoryList extends State<MyCategoryList> {
                     child: InkWell(
                       child: Container(
                         height: 200,
-                        margin: EdgeInsets.all(5),
+                        margin: const EdgeInsets.all(5),
                         decoration: BoxDecoration(
-                          boxShadow: [
-                            BoxShadow(blurRadius: 3, color: Colors.black)
+                          boxShadow: const [
+                            BoxShadow(
+                                spreadRadius: 1,
+                                blurRadius: 3,
+                                color: Color.fromRGBO(
+                                    210, 210, 210, 1.0))
                           ],
                           borderRadius: BorderRadius.circular(10),
                           color: Colors.white,
@@ -187,29 +103,33 @@ class _MyCategoryList extends State<MyCategoryList> {
                             AspectRatio(
                               aspectRatio: 1.2,
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(20, 20, 20, 0),
                                 child: Container(
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(8.0),
-                                      color:
-                                          Color.fromRGBO(184, 183, 183, 0.635)),
+                                      color: const Color.fromRGBO(
+                                          184, 183, 183, 0.635)),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(8.0),
-                                    child: Image.asset(
-                                      categories[1].products[index].imageSource,
+                                    child: Image.memory(
+                                      base64Decode(widget
+                                          .category
+                                          .allProducts[index]
+                                          .imageSource),
                                       fit: BoxFit.fill,
                                     ),
                                   ),
                                 ),
                               ),
                             ),
-                            Container(
+                            SizedBox(
                               height: 65,
                               child: Padding(
                                 padding:
                                     const EdgeInsets.fromLTRB(25, 10, 25, 15),
                                 child: Text(
-                                  categories[1].products[index].name,
+                                  widget.category.allProducts[index].name,
                                   style: const TextStyle(
                                       fontSize: 18.0,
                                       fontWeight: FontWeight.bold),
@@ -218,46 +138,47 @@ class _MyCategoryList extends State<MyCategoryList> {
                                 ),
                               ),
                             ),
+                            // Padding(
+                            //   padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
+                            //   child: Text(
+                            //     widget.category.subCategories[0].products[index]
+                            //         .type,
+                            //     style: const TextStyle(
+                            //       fontSize: 13.0,
+                            //     ),
+                            //     maxLines: 1,
+                            //     overflow: TextOverflow.ellipsis,
+                            //   ),
+                            // ),
+                            const SizedBox(height: 8.0),
                             Padding(
-                              padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
+                              padding: const EdgeInsets.fromLTRB(25, 0, 25, 0),
                               child: Text(
-                                categories[1].products[index].type,
-                                style: TextStyle(
-                                  fontSize: 13.0,
-                                ),
-                                maxLines: 1,
-                                overflow: TextOverflow.ellipsis,
-                              ),
-                            ),
-                            SizedBox(height: 8.0),
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(25, 0, 25, 0),
-                              child: Text(
-                                "RM " +
-                                    (categories[1].products[index].price)
-                                        .toStringAsFixed(2),
-                                style: TextStyle(
+                                "RM ${(widget.category.allProducts[index].price).toStringAsFixed(2)}",
+                                style: const TextStyle(
                                     fontSize: 18.0,
                                     fontWeight: FontWeight.bold),
                               ),
                             ),
                             Expanded(
                               child: Padding(
-                                padding: EdgeInsets.fromLTRB(10, 0, 10, 0),
+                                padding:
+                                    const EdgeInsets.fromLTRB(10, 0, 10, 0),
                                 child: TextButton(
                                   onPressed: () {},
                                   child: Container(
                                     alignment: Alignment.bottomCenter,
                                     height: 40,
                                     width: double.infinity,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color:
                                           Color.fromRGBO(176, 154, 115, 0.841),
                                       borderRadius:
                                           BorderRadius.all(Radius.circular(20)),
                                     ),
                                     child: CartCount(
-                                        product: categories[1].products[index]),
+                                        product: widget.category
+                                            .allProducts[index]),
                                   ),
                                 ),
                               ),
