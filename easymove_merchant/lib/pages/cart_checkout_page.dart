@@ -26,18 +26,33 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
   final msgController = TextEditingController();
   late MyDropDown zoneDropDown;
   late MyDropDown vehicleDropDown;
-  late Map<String, int> zoneMap;
-  late Map<String, int> vehicleMap;
+  Map<String, int> zoneMap = {};
+  Map<String, int> vehicleMap = {};
   Cart myCart = Cart();
+  late Future<List<dynamic>> zoneFuture;
+  late Future<List<dynamic>> vehicleFuture;
+
+  @override
+  void initState(){
+    super.initState();
+    zoneFuture = getZones();
+    vehicleFuture = getVehicles();
+  }
 
   Future<List<dynamic>> getZones() async{
     List<dynamic> data = await MyApiService.getZones();
     List<dynamic> zone = [];
-    Map<String, int> zoneMap = {};
-    for(var z in data){
-      zone.add(z["zone"]);
-      zoneMap.addAll({z["zone"]: z["id"]});
+    try {
+      zoneMap.clear();
+      for (var z in data) {
+        zone.add(z["zone"]);
+        zoneMap.addAll({z["zone"]: z["id"]});
+      }
+      print(zone);
+    }catch(e){
+      print(e);
     }
+    print(zone);
     return zone;
   }
 
@@ -75,10 +90,16 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             DeliveryDetailsInput(textEditingController: deliveryController),
             const DeliveryDetailsInputTitle(textTitle: "Zone"),
             FutureBuilder(
-              future: getZones(),
+              future: zoneFuture,
               builder: ((context, snapshot) {
                 if(snapshot.hasData) {
-                  zoneDropDown = MyDropDown(myList: snapshot.data!,);
+                  List<dynamic> dataList = [];
+                  for(var d in snapshot.data!){
+                    if(!dataList.contains(d)){
+                      dataList.add(d);
+                    }
+                  }
+                  zoneDropDown = MyDropDown(myList: dataList,);
                   return zoneDropDown;
                 }else{
                   return Padding(
@@ -98,10 +119,16 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             ),
             const DeliveryDetailsInputTitle(textTitle: "Vehicle Requirements"),
             FutureBuilder(
-                future: getVehicles(),
+                future: vehicleFuture,
                 builder: ((context, snapshot) {
                   if(snapshot.hasData) {
-                    vehicleDropDown = MyDropDown(myList: snapshot.data!,);
+                    List<dynamic> dataList = [];
+                    for(var d in snapshot.data!){
+                      if(!dataList.contains(d)){
+                        dataList.add(d);
+                      }
+                    }
+                    vehicleDropDown = MyDropDown(myList: dataList,);
                     return vehicleDropDown;
                   }else{
                     return Padding(

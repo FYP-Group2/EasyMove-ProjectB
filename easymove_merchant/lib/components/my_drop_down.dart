@@ -30,7 +30,8 @@ class MyDropDownState extends State<MyDropDown> {
         ),
         child: DropdownButtonHideUnderline(
           child: DropdownButton(
-            value: widget.selected,
+            focusNode: FocusNode(canRequestFocus: false),
+            value: widget.selected.isNotEmpty? widget.selected : null,
             items: widget.myList
                 .map(
                   (region) => DropdownMenuItem<String>(

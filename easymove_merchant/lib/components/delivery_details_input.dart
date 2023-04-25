@@ -19,6 +19,7 @@ class DeliveryDetailsInputState extends State<DeliveryDetailsInput>{
           borderRadius: const BorderRadius.all(Radius.circular(10)),
         ),
         child: TextFormField(
+          focusNode: FocusNode(canRequestFocus: false),
           controller: widget.textEditingController,
           decoration: const InputDecoration(
             border: InputBorder.none,
