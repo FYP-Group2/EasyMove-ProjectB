@@ -1,8 +1,11 @@
+import 'package:easymove_merchant/pages/info_page.dart';
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/login_page.dart';
+import 'package:easymove_merchant/services/my_api_service.dart';
 
 class SignUpPage extends StatefulWidget {
   const SignUpPage({super.key, required this.title});
+
   final String title;
 
   @override
@@ -15,23 +18,29 @@ class _SignUpPageState extends State<SignUpPage> {
   final _semailController = TextEditingController();
   final _sbusinessController = TextEditingController();
   final _smobileController = TextEditingController();
-  final _sregionController = TextEditingController();
-  final _szoneController = TextEditingController();
   final _saddressController = TextEditingController();
 
-  String _selectedRegion = 'Select Region';
-  final List<String> _regionList = [
-    'Select Region',
-    'region 1',
-    'region 2',
-  ];
+  String _selectedRegion = 'Select a Region';
+  List<String> _regionList = ['Select a Region'];
 
-  String _selectedZone = 'Select Zone';
-  final List<String> _zoneList = [
-    'Select Zone',
-    'zone 1',
-    'zone 2',
-  ];
+  String _selectedZone = 'Select a Zone';
+  List<String> _zoneList = ['Select a Zone'];
+
+  Future<List<dynamic>> getZones() async {
+    List<dynamic> data = await MyApiService.getZones();
+    List<dynamic> zone = [];
+    for (var z in data) {
+      if(!zone.contains(z["zone"])) {
+        zone.add(z["zone"]);
+      }
+    }
+    return zone;
+  }
+
+  Future<List<dynamic>> getRegions() async {
+    List<dynamic> data = await MyApiService.getRegions();
+    return data[1];
+  }
 
   @override
   void dispose() {
@@ -39,8 +48,6 @@ class _SignUpPageState extends State<SignUpPage> {
     _semailController.dispose();
     _sbusinessController.dispose();
     _smobileController.dispose();
-    _sregionController.dispose();
-    _szoneController.dispose();
     _saddressController.dispose();
     super.dispose();
   }
@@ -225,27 +232,43 @@ class _SignUpPageState extends State<SignUpPage> {
                         ],
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white),
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedRegion,
-                      items: _regionList
-                          .map(
-                            (region) => DropdownMenuItem<String>(
-                              value: region,
-                              child: Text(region),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedRegion = value!;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Region',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                    ),
+                    child: FutureBuilder(
+                        future: getRegions(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<String> dataList = ["Select a Region"];
+                            for (var d in snapshot.data!) {
+                              if (!dataList.contains(d)) {
+                                dataList.add(d);
+                              }
+                            }
+                            _regionList = dataList;
+                            return DropdownButtonFormField<String>(
+                              isExpanded: true,
+                              value: _selectedRegion.isNotEmpty? _selectedRegion : null,
+                              items: _regionList
+                                  .map(
+                                    (region) => DropdownMenuItem<String>(
+                                  value: region,
+                                  child: Text(region),
+                                ),
+                              )
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedRegion = value!;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Region',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                            );
+                          } else {
+                            return const Center(child:Text("Loading..."));
+                          }
+                        })),
                   ),
                   const SizedBox(height: 15.0),
                   Container(
@@ -260,27 +283,43 @@ class _SignUpPageState extends State<SignUpPage> {
                         ],
                         borderRadius: BorderRadius.circular(10),
                         color: Colors.white),
-                    child: DropdownButtonFormField<String>(
-                      value: _selectedZone,
-                      items: _zoneList
-                          .map(
-                            (zone) => DropdownMenuItem<String>(
-                              value: zone,
-                              child: Text(zone),
-                            ),
-                          )
-                          .toList(),
-                      onChanged: (value) {
-                        setState(() {
-                          _selectedZone = value!;
-                        });
-                      },
-                      decoration: const InputDecoration(
-                        hintText: 'Zone',
-                        border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(16),
-                      ),
-                    ),
+                    child: FutureBuilder(
+                        future: getZones(),
+                        builder: ((context, snapshot) {
+                          if (snapshot.hasData) {
+                            List<String> dataList = ["Select a Zone"];
+                            for (var d in snapshot.data!) {
+                              if (!dataList.contains(d)) {
+                                dataList.add(d);
+                              }
+                            }
+                            _zoneList = dataList;
+                            return DropdownButtonFormField<String>(
+                              isExpanded: true,
+                              value: _selectedZone.isNotEmpty ? _selectedZone : null,
+                              items: _zoneList
+                                  .map(
+                                    (zone) => DropdownMenuItem<String>(
+                                      value: zone,
+                                      child: Text(zone),
+                                    ),
+                                  )
+                                  .toList(),
+                              onChanged: (value) {
+                                setState(() {
+                                  _selectedZone = value!;
+                                });
+                              },
+                              decoration: const InputDecoration(
+                                hintText: 'Zone',
+                                border: InputBorder.none,
+                                contentPadding: EdgeInsets.all(16),
+                              ),
+                            );
+                          } else {
+                            return const Center(child:Text("Loading..."));
+                          }
+                        })),
                   ),
                   const SizedBox(height: 15.0),
                   Container(
@@ -314,15 +353,15 @@ class _SignUpPageState extends State<SignUpPage> {
                     padding: const EdgeInsets.only(top: 20.0),
                     child: Row(
                       children: <Widget>[
-                        Icon(
+                        const Icon(
                           Icons.check_box_outline_blank_rounded,
                           size: 30,
                         ),
-                        SizedBox(width: 10),
+                        const SizedBox(width: 10),
                         SizedBox(
                           width: screenWidth - 100,
                           height: 40,
-                          child: Text(
+                          child: const Text(
                             "I agree to the Privacy Policy, Terms and Conditions.",
                             style: TextStyle(fontSize: 15, color: Colors.black),
                           ),
@@ -335,12 +374,54 @@ class _SignUpPageState extends State<SignUpPage> {
                     padding: const EdgeInsets.only(bottom: 20.0),
                     child: ElevatedButton(
                       onPressed: () async {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) =>
-                                  const LoginPage(title: "Login")),
-                        );
+                        print("---Sign up details\n"
+                            "${_scompanyController.text}\n"
+                            "${_semailController.text}\n"
+                            "${_sbusinessController.text}\n"
+                            "${_smobileController.text}\n"
+                            "$_selectedRegion\n"
+                            "$_selectedZone\n"
+                            "${_saddressController.text}");
+                        await MyApiService.merchantSignUp(_scompanyController.text, _semailController.text,
+                            _sbusinessController.text, _smobileController.text, _selectedRegion,
+                            _selectedZone, _saddressController.text)
+                            .then((result){
+                              if(result["result"] == true){
+                                Navigator.of(context).push(PageRouteBuilder(
+                                    opaque: false,
+                                    pageBuilder: (BuildContext context, _, __) =>
+                                    const InfoPage(
+                                        titleText: "Signup Successful",
+                                        displayText:
+                                        "Please be patient, we will contact you in a few days time",
+                                        pageRoute: LoginPage())));
+                              }else{
+                                showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return AlertDialog(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                              BorderRadius.circular(8)),
+                                          title: const Text("Signup failed"),
+                                          content: Text("${result["message"]}"),
+                                          actions: [
+                                            TextButton(
+                                              onPressed: () {
+                                                Navigator.of(context).pop(false);
+                                                setState(() {});
+                                              },
+                                              child: const Text(
+                                                "Ok",
+                                                style: TextStyle(
+                                                  fontSize: 20,
+                                                ),
+                                              ),
+                                            ),
+                                          ]);
+                                    });
+                              }
+                        });
                       },
                       style: ButtonStyle(
                         minimumSize: MaterialStateProperty.all(

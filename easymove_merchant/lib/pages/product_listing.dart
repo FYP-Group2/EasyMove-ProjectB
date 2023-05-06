@@ -544,7 +544,7 @@ class _ProductListState extends StatelessWidget {
             }
           }),
       bottomNavigationBar: const MyBottomNavigationBar(
-        index: 0,
+        index: 1,
         fillCorner: false,
       ),
     );

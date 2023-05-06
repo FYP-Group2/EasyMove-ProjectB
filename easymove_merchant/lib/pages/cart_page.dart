@@ -51,7 +51,8 @@ class CartState extends State<CartPage> {
                               borderRadius:
                                   const BorderRadius.all(Radius.circular(20.0)),
                               child: Image.memory(
-                                base64Decode(myCart.products[index].imageSource),
+                                base64Decode(
+                                    myCart.products[index].imageSource),
                                 fit: BoxFit.fill,
                               ),
                               // child: Image.memory(
@@ -71,7 +72,8 @@ class CartState extends State<CartPage> {
                           Expanded(
                             child: Text(
                               myCart.products[index].name,
-                              style: const TextStyle(fontSize: 18, fontWeight: FontWeight.w500),
+                              style: const TextStyle(
+                                  fontSize: 18, fontWeight: FontWeight.w500),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                             ),
@@ -80,7 +82,8 @@ class CartState extends State<CartPage> {
                             "RM${myCart.products[index].price.toStringAsFixed(2)}"
                             "/${myCart.productsAmount[myCart.products[index].name]}",
                             style: const TextStyle(
-                                fontSize: 16, color: Color.fromRGBO(80, 80, 80, 1.0)),
+                                fontSize: 16,
+                                color: Color.fromRGBO(80, 80, 80, 1.0)),
                             maxLines: 1,
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -191,11 +194,40 @@ class CartState extends State<CartPage> {
                       width: MediaQuery.of(context).size.width * 0.6,
                       child: ElevatedButton(
                         onPressed: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) =>
-                                      const CartCheckoutPage()));
+                          if (myCart.products.isNotEmpty) {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) =>
+                                        const CartCheckoutPage()));
+                          } else {
+                            showDialog(
+                                context: context,
+                                builder: ((context) {
+                                  return AlertDialog(
+                                      shape: RoundedRectangleBorder(
+                                          borderRadius:
+                                              BorderRadius.circular(8)),
+                                      title: const Text("Checkout failed"),
+                                      //myAlertBoxTitle(action),
+                                      content:
+                                          const Text("There is no product in cart"),
+                                      actions: [
+                                        TextButton(
+                                          onPressed: () {
+                                            Navigator.of(context).pop(false);
+                                            setState(() {});
+                                          },
+                                          child: const Text(
+                                            "Ok",
+                                            style: TextStyle(
+                                              fontSize: 20,
+                                            ),
+                                          ),
+                                        ),
+                                      ]);
+                                }));
+                          }
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color(0xFFB09A73),
@@ -217,7 +249,7 @@ class CartState extends State<CartPage> {
         ],
       ),
       bottomNavigationBar: const MyBottomNavigationBar(
-        index: 1,
+        index: 2,
         fillCorner: true,
       ),
     );

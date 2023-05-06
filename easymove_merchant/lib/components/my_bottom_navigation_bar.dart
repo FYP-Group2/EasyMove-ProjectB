@@ -1,3 +1,5 @@
+import 'package:easymove_merchant/pages/home_page.dart';
+import 'package:easymove_merchant/pages/notification_page.dart';
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
 import 'package:easymove_merchant/pages/cart_page.dart';
@@ -49,19 +51,36 @@ class MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const productPage()));
+                              builder: (context) => const HomePage()));
                       break;
                     case 1:
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const CartPage()));
+                              builder: (context) => const productPage()));
                       break;
                     case 2:
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const CartPage()));
+                      break;
+                    case 3:
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const NotificationPage()));
                       break;
                   }
                 },
                 items: const [
+                  BottomNavigationBarItem(
+                    icon: Icon(
+                      Icons.home_outlined,
+                      size: 40,
+                    ),
+                    label: 'Home',
+                  ),
                   BottomNavigationBarItem(
                     icon: Icon(
                       Icons.menu,
@@ -78,7 +97,7 @@ class MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
                   ),
                   BottomNavigationBarItem(
                     icon: Icon(
-                      Icons.account_circle_outlined,
+                      Icons.notifications_none_outlined,
                       size: 40,
                     ),
                     label: 'Account',

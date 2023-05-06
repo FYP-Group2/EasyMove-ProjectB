@@ -1,13 +1,13 @@
 import 'package:easymove_merchant/models/merchant.dart';
 import 'package:easymove_merchant/pages/product_listing.dart';
+import 'package:easymove_merchant/services/firebase_messaging_service.dart';
 import 'package:easymove_merchant/services/my_api_service.dart';
 import 'package:flutter/material.dart';
 import 'package:easymove_merchant/pages/signup_page.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class LoginPage extends StatefulWidget {
-  const LoginPage({super.key, required this.title});
-
-  final String title;
+  const LoginPage({super.key});
 
   @override
   State<LoginPage> createState() => _LoginPageState();
@@ -20,19 +20,125 @@ class _LoginPageState extends State<LoginPage> {
   final _remailController = TextEditingController();
   Merchant merchant = Merchant();
 
+  void autoLogin() async {
+    Future.delayed(const Duration(seconds: 3)).then(
+      (value) async => await SharedPreferences.getInstance().then((value) {
+        if (value.getString("email") != null &&
+            value.getString("email") != "" &&
+            value.getString("password") != null &&
+            value.getString("password") != "") {
+          String email = value.getString("email")!;
+          String password = value.getString("password")!;
+          showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8)),
+                    title: const Text("Last login detected"),
+                    content: Text("Proceed to login as $email ?"),
+                    actions: [
+                      TextButton(
+                        onPressed: () async {
+                          await merchantLogin(email, password)
+                              .then((result) async {
+                            if (result["result"] == true) {
+                              await SharedPreferences.getInstance()
+                                  .then((value) {
+                                value.setString(
+                                    "email", _lemailController.text);
+                                value.setString(
+                                    "password", _lpasswordController.text);
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) =>
+                                          const productPage()),
+                                );
+                              });
+                            } else {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return AlertDialog(
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(8)),
+                                        title: const Text("Login failed"),
+                                        //myAlertBoxTitle(action),
+                                        content: Text("${result["message"]}"),
+                                        actions: [
+                                          TextButton(
+                                            onPressed: () {
+                                              Navigator.of(context).pop(false);
+                                              setState(() {});
+                                            },
+                                            child: const Text(
+                                              "Ok",
+                                              style: TextStyle(
+                                                fontSize: 20,
+                                              ),
+                                            ),
+                                          ),
+                                        ]);
+                                  });
+                            }
+                          });
+                        },
+                        child: const Text(
+                          "Yes",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          Navigator.of(context).pop(false);
+                          setState(() {});
+                        },
+                        child: const Text(
+                          "No",
+                          style: TextStyle(
+                            fontSize: 20,
+                          ),
+                        ),
+                      ),
+                    ]);
+              });
+        }
+      }),
+    );
+  }
+
   Future<Map<String, dynamic>> merchantLogin(
       String username, String password) async {
     Map<String, dynamic> result = {"result": false};
     final data = await MyApiService.merchantLogIn(username, password);
     if (data["result"] == true) {
       result["result"] = true;
-      print(data);
-      merchant.initializeMerchant(data["id"], data["region"], data["company"],
-          data["branch"], data["branch_location"], data["branch_location_coordinate"]);
+      FirebaseMessagingService firebaseMessagingService = FirebaseMessagingService();
+      String token = firebaseMessagingService.getFcmToken();
+      merchant.initializeMerchant(
+          data["id"],
+          data["region"],
+          data["company"],
+          data["branch"],
+          data["branch_location"],
+          data["branch_location_coordinate"],
+          token);
+
+      await MyApiService.updateToken(merchant.id, merchant.fcmToken);
     } else {
       result["message"] = data["message"];
     }
     return result;
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    autoLogin();
   }
 
   @override
@@ -46,7 +152,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
-
     return Stack(
       children: [
         Scaffold(
@@ -224,8 +329,7 @@ class _LoginPageState extends State<LoginPage> {
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
-                                                        const LoginPage(
-                                                            title: "Login")),
+                                                        const LoginPage()),
                                               );
                                             });
                                           },
@@ -279,27 +383,38 @@ class _LoginPageState extends State<LoginPage> {
                               onPressed: () async {
                                 await merchantLogin(_lemailController.text,
                                         _lpasswordController.text)
-                                    .then((result) {
+                                    .then((result) async {
                                   if (result["result"] == true) {
-                                    Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) =>
-                                              const productPage()),
-                                    );
-                                  }else{
+                                    await SharedPreferences.getInstance()
+                                        .then((value) {
+                                      value.setString(
+                                          "email", _lemailController.text);
+                                      value.setString("password",
+                                          _lpasswordController.text);
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) =>
+                                                const productPage()),
+                                      );
+                                    });
+                                  } else {
                                     showDialog(
                                         context: context,
                                         builder: (context) {
                                           return AlertDialog(
                                               shape: RoundedRectangleBorder(
-                                                  borderRadius: BorderRadius.circular(8)),
-                                              title: const Text("Login failed"), //myAlertBoxTitle(action),
-                                              content: Text("${result["message"]}"),
+                                                  borderRadius:
+                                                      BorderRadius.circular(8)),
+                                              title: const Text("Login failed"),
+                                              //myAlertBoxTitle(action),
+                                              content:
+                                                  Text("${result["message"]}"),
                                               actions: [
                                                 TextButton(
                                                   onPressed: () {
-                                                    Navigator.of(context).pop(false);
+                                                    Navigator.of(context)
+                                                        .pop(false);
                                                     setState(() {});
                                                   },
                                                   child: const Text(

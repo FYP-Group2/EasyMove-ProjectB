@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'package:easymove_merchant/models/merchant.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
+import 'package:easymove_merchant/models/notification_data.dart';
 
 const String url = "http://awcgroup.com.my/easymovenpick.com/api";
 const String merchantUrl = "http://awcgroup.com.my/merchant_store/api";
@@ -23,6 +24,48 @@ class MyApiService {
     return data["auth_user"];
   }
 
+  static Future<Map<String, dynamic>> merchantSignUp(String companyName, String email, String business,
+      String mobile, String region, String zone, String address) async {
+    Map<String, String> body = {
+      "company_name" : companyName,
+      "email" : email,
+      "business_field" : business,
+      "mobile_number" : mobile,
+      "region" : region,
+      "zone" : zone,
+      "address" : address
+    };
+    const String apiEndpoint = "$url/merchant_register.php";
+    final response = await http.post(
+        Uri.parse(apiEndpoint),
+        body: body
+    );
+    print(response.body);
+    final data = json.decode(response.body);
+    return data;
+  }
+
+  static Future<List> getRegions() async{
+    Map<String, int> regionMap = {};
+    List<String> regionList = [];
+    String apiEndpoint = "$url/regions.php";
+
+    final response = await http.post(Uri.parse(apiEndpoint));
+    final data = json.decode(response.body);
+
+    List elements = data["options"];
+    for(var e in elements){
+      if(!regionList.contains(e["label"])) {
+        Map<String, int> region = {e["label"]: e["value"]};
+        regionMap.addAll(region);
+        regionList.add(e["label"]);
+      }
+    }
+
+    List regions = [regionMap, regionList];
+    return regions;
+  }
+
   static Future<List<dynamic>> getVehicles() async {
     Map<String, int> vehicleMap = {};
     List<String> vehicleList = [];
@@ -32,9 +75,11 @@ class MyApiService {
 
     List elements = data["options"];
     for (var e in elements) {
-      Map<String, int> vehicle = {e["label"]: e["value"]};
-      vehicleMap.addAll(vehicle);
-      vehicleList.add(e["label"]);
+      if(!vehicleList.contains(e["label"])) {
+        Map<String, int> vehicle = {e["label"]: e["value"]};
+        vehicleMap.addAll(vehicle);
+        vehicleList.add(e["label"]);
+      }
     }
 
     List vehicles = [vehicleMap, vehicleList];
@@ -46,6 +91,16 @@ class MyApiService {
     final response = await http.post(Uri.parse(apiEndpoint));
     final data = json.decode(response.body);
     return data["zone"];
+  }
+
+  static Future<void> getOrder(int id) async {
+    String apiEndpoint = "$url/merchant_order.php";
+    Map<String, dynamic> body = {};
+    body["id"] = "$id";
+    final response = await http.post(Uri.parse(apiEndpoint), body: body);
+    final data = json.decode(response.body);
+    print(id);
+    print(data);
   }
 
   static Future<dynamic> getTrip() async {
@@ -83,7 +138,8 @@ class MyApiService {
   }
 
   static Future<void> placeOrder(String cName, String phone, String origin, String destination,
-      String cProperty, String collect, String delivery, int zone, int vehicle, String message) async {
+      String cProperty, String collect, String delivery, int zone, int vehicle, String message,
+      String originCoor, String destCoor) async {
     String apiEndpoint = "$url/place_order.php";
     Map<String, dynamic> body = {};
     body['customer_name'] = cName;
@@ -100,13 +156,53 @@ class MyApiService {
     body['company'] = merchant.companyId;
     body['branch'] = merchant.branchId;
     body['merchant'] = merchant.id;
-    body['sendfrom_coordinate'] = merchant.branchCoordinate;
-    body['sendto_coordinate'] = "1.520842874515408,110.35449507023179";
+    body['sendfrom_coordinate'] = originCoor;
+    body['sendto_coordinate'] = destCoor;
     body['distance'] = 2.8;
     FormData formData = FormData.fromMap(body);
     final response = await Dio().post(apiEndpoint, data: formData);
     final data = json.decode(response.toString());
     print(data);
   }
+
+  static Future<void> updateToken(int merchantId, String token) async {
+    String apiEndpoint = "$url/merchant_firebase_token.php";
+    final Map<String, String> body = ({'id': "$merchantId", 'token': token});
+    await http.post(
+        Uri.parse(apiEndpoint),
+        body: body
+    );
+  }
+
+  static Future<List<Map<String, dynamic>>> fetchNoti(int merchantId, String year, String month) async {
+    String apiEndpoint = "$url/notification_statement.php";
+    final Map<String, String> body = ({'mid': "$merchantId", 'year': year, 'month': month});
+    final response = await http.post(
+        Uri.parse(apiEndpoint),
+        body: body
+    );
+
+    if (response.statusCode == 200) {
+      Map<String, dynamic> data = json.decode(response.body);
+      if(data.containsKey("notifications")) {
+        List<Map<String, dynamic>> notifications = data["notifications"];
+        return notifications;
+      }else{
+        return [{"result":false}];
+      }
+    } else {
+      return [{"result":false}];
+    }
+  }
+
+  static Future<void> forgotPassword(String email) async {
+    String apiEndpoint = "$url/forgot_password.php";
+    final Map<String, String> body = ({'merchant_email': email});
+    await http.post(
+        Uri.parse(apiEndpoint),
+        body: body
+    );
+  }
+
 
 }

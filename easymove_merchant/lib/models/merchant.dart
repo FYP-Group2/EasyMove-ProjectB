@@ -6,6 +6,7 @@ class Merchant {
   late int region;
   late String branchLocation;
   late String branchCoordinate;
+  late String fcmToken;
 
   Merchant._internal();
 
@@ -14,13 +15,14 @@ class Merchant {
   }
 
   void initializeMerchant(
-      int id, int region, int companyId, int branchId, String branchLocation, String branchCoordinate) {
+      int id, int region, int companyId, int branchId, String branchLocation, String branchCoordinate, String fcmToken) {
     this.id = id;
     this.region = region;
     this.companyId = companyId;
     this.branchId = branchId;
     this.branchLocation = branchLocation;
     this.branchCoordinate = branchCoordinate;
+    this.fcmToken = fcmToken;
   }
 
 }

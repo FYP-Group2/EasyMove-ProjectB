@@ -1,21 +1,15 @@
 import 'package:flutter/material.dart';
 
 class MyDropDown extends StatefulWidget {
-  final List<dynamic> myList;
+  List<dynamic> myList;
   String selected = "";
-  MyDropDown({super.key, required this.myList});
+  MyDropDown({super.key, required this.myList, required this.selected});
 
   @override
   State<MyDropDown> createState() => MyDropDownState();
 }
 
 class MyDropDownState extends State<MyDropDown> {
-
-  @override
-  void initState(){
-    super.initState();
-    widget.selected = widget.myList[0];
-  }
 
   @override
   Widget build(BuildContext context) {

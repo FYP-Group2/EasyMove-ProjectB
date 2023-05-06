@@ -4,9 +4,12 @@ import 'package:easymove_merchant/components/delivery_details_input.dart';
 import 'package:easymove_merchant/components/delivery_details_input_title.dart';
 import 'package:easymove_merchant/components/my_drop_down.dart';
 import 'package:easymove_merchant/components/trip_table.dart';
+import 'package:easymove_merchant/components/places_autocomplete_input.dart';
 import 'package:easymove_merchant/models/cart.dart';
 import 'package:easymove_merchant/services/my_api_service.dart';
+import 'package:easymove_merchant/services/google_places_service.dart';
 import 'package:flutter/material.dart';
+import 'package:uuid/uuid.dart';
 
 class CartCheckoutPage extends StatefulWidget {
   const CartCheckoutPage({super.key});
@@ -18,45 +21,42 @@ class CartCheckoutPage extends StatefulWidget {
 class CartCheckoutPageState extends State<CartCheckoutPage> {
   final cNameController = TextEditingController();
   final phoneController = TextEditingController();
-  final originController = TextEditingController();
-  final destController = TextEditingController();
   final cPropertyController = TextEditingController();
   final collectController = TextEditingController();
   final deliveryController = TextEditingController();
   final msgController = TextEditingController();
-  late MyDropDown zoneDropDown;
-  late MyDropDown vehicleDropDown;
+  late MyDropDown zoneDropDown = MyDropDown(myList: const ["Select a zone"], selected: "Select a zone");
+  late MyDropDown vehicleDropDown = MyDropDown(myList: const ["Select a vehicle"], selected: "Select a vehicle");
+  late PlacesAutocompleteInput originAutocomplete;
+  late PlacesAutocompleteInput destAutocomplete;
   Map<String, int> zoneMap = {};
   Map<String, int> vehicleMap = {};
   Cart myCart = Cart();
-  late Future<List<dynamic>> zoneFuture;
-  late Future<List<dynamic>> vehicleFuture;
+  String sessionToken = const Uuid().v4();
+  late PlaceApiProvider googlePlaces;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-    zoneFuture = getZones();
-    vehicleFuture = getVehicles();
+    originAutocomplete = PlacesAutocompleteInput(sessionToken: sessionToken);
+    destAutocomplete = PlacesAutocompleteInput(sessionToken: sessionToken);
+    googlePlaces = PlaceApiProvider(sessionToken);
   }
 
-  Future<List<dynamic>> getZones() async{
+  Future<List<dynamic>> getZones() async {
     List<dynamic> data = await MyApiService.getZones();
     List<dynamic> zone = [];
-    try {
-      zoneMap.clear();
-      for (var z in data) {
+    zoneMap.clear();
+    for (var z in data) {
+      if(!zone.contains(z["zone"])) {
         zone.add(z["zone"]);
         zoneMap.addAll({z["zone"]: z["id"]});
       }
-      print(zone);
-    }catch(e){
-      print(e);
     }
-    print(zone);
     return zone;
   }
 
-  Future<List<dynamic>> getVehicles() async{
+  Future<List<dynamic>> getVehicles() async {
     List<dynamic> data = await MyApiService.getVehicles();
     vehicleMap = data[0];
     return data[1];
@@ -79,9 +79,9 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             const DeliveryDetailsInputTitle(textTitle: "Phone"),
             DeliveryDetailsInput(textEditingController: phoneController),
             const DeliveryDetailsInputTitle(textTitle: "Origin"),
-            DeliveryDetailsInput(textEditingController: originController),
+            PlacesAutocompleteInput(sessionToken: sessionToken),
             const DeliveryDetailsInputTitle(textTitle: "Destination"),
-            DeliveryDetailsInput(textEditingController: destController),
+            PlacesAutocompleteInput(sessionToken: sessionToken),
             const DeliveryDetailsInputTitle(textTitle: "Customer Property No."),
             DeliveryDetailsInput(textEditingController: cPropertyController),
             const DeliveryDetailsInputTitle(textTitle: "Collection Time"),
@@ -90,62 +90,64 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             DeliveryDetailsInput(textEditingController: deliveryController),
             const DeliveryDetailsInputTitle(textTitle: "Zone"),
             FutureBuilder(
-              future: zoneFuture,
-              builder: ((context, snapshot) {
-                if(snapshot.hasData) {
-                  List<dynamic> dataList = [];
-                  for(var d in snapshot.data!){
-                    if(!dataList.contains(d)){
-                      dataList.add(d);
-                    }
-                  }
-                  zoneDropDown = MyDropDown(myList: dataList,);
-                  return zoneDropDown;
-                }else{
-                  return Padding(
-                    padding: const EdgeInsets.only(top: 5, left: 30, right: 30, bottom: 25),
-                    child: Container(
-                        decoration: BoxDecoration(
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
-                        ),
-                        child: const Text("Loading..."),
-                    ),
-                  );
-                }
-              })
-            ),
-            const DeliveryDetailsInputTitle(textTitle: "Vehicle Requirements"),
-            FutureBuilder(
-                future: vehicleFuture,
+                future: getZones(),
                 builder: ((context, snapshot) {
-                  if(snapshot.hasData) {
-                    List<dynamic> dataList = [];
-                    for(var d in snapshot.data!){
-                      if(!dataList.contains(d)){
+                  if (snapshot.hasData) {
+                    List<dynamic> dataList = ["Select a zone"];
+                    for (var d in snapshot.data!) {
+                      if (!dataList.contains(d)) {
                         dataList.add(d);
                       }
                     }
-                    vehicleDropDown = MyDropDown(myList: dataList,);
-                    return vehicleDropDown;
-                  }else{
+                    zoneDropDown.myList = dataList;
+                    return zoneDropDown;
+                  } else {
                     return Padding(
-                      padding: const EdgeInsets.only(top: 5, left: 30, right: 30, bottom: 25),
+                      padding: const EdgeInsets.only(
+                          top: 5, left: 30, right: 30, bottom: 25),
                       child: Container(
                         decoration: BoxDecoration(
                           border: Border.all(
                             color: Colors.grey,
                           ),
-                          borderRadius: const BorderRadius.all(Radius.circular(10)),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: const Text("Loading..."),
                       ),
                     );
                   }
-                })
-            ),
+                })),
+            const DeliveryDetailsInputTitle(textTitle: "Vehicle Requirements"),
+            FutureBuilder(
+                future: getVehicles(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<dynamic> dataList = ["Select a vehicle"];
+                    for (var d in snapshot.data!) {
+                      if (!dataList.contains(d)) {
+                        dataList.add(d);
+                      }
+                    }
+                    vehicleDropDown.myList = dataList;
+                    return vehicleDropDown;
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          top: 5, left: 30, right: 30, bottom: 25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: const Text("Loading..."),
+                      ),
+                    );
+                  }
+                })),
             const DeliveryDetailsInputTitle(textTitle: "Additional Message"),
             DeliveryDetailsInput(textEditingController: msgController),
             Padding(
@@ -278,17 +280,20 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: ElevatedButton(
                           onPressed: () {
-                            MyApiService.placeOrder(
-                                cNameController.text,
-                                phoneController.text,
-                                originController.text,
-                                destController.text,
-                                cPropertyController.text,
-                                collectController.text,
-                                deliveryController.text,
-                                zoneMap[zoneDropDown.selected]!,
-                                vehicleMap[vehicleDropDown.selected]!,
-                                msgController.text);
+                            googlePlaces.getCoordinates(originAutocomplete.);
+                            // MyApiService.placeOrder(
+                            //     cNameController.text,
+                            //     phoneController.text,
+                            //     originAutocomplete.selected,
+                            //     destAutocomplete.selected,
+                            //     cPropertyController.text,
+                            //     collectController.text,
+                            //     deliveryController.text,
+                            //     zoneMap[zoneDropDown.selected]!,
+                            //     vehicleMap[vehicleDropDown.selected]!,
+                            //     msgController.text,
+                            //     "",
+                            //     "");
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFB09A73),
@@ -309,7 +314,7 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
         ),
       ),
       bottomNavigationBar: const MyBottomNavigationBar(
-        index: 1,
+        index: 2,
         fillCorner: false,
       ),
     );
