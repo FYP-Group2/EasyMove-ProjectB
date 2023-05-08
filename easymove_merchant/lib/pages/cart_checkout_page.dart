@@ -3,13 +3,13 @@ import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/delivery_details_input.dart';
 import 'package:easymove_merchant/components/delivery_details_input_title.dart';
 import 'package:easymove_merchant/components/my_drop_down.dart';
+import 'package:easymove_merchant/components/my_time_picker.dart';
 import 'package:easymove_merchant/components/trip_table.dart';
 import 'package:easymove_merchant/components/places_autocomplete_input.dart';
 import 'package:easymove_merchant/models/cart.dart';
 import 'package:easymove_merchant/services/my_api_service.dart';
 import 'package:easymove_merchant/services/google_places_service.dart';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
 
 class CartCheckoutPage extends StatefulWidget {
   const CartCheckoutPage({super.key});
@@ -25,22 +25,38 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
   final collectController = TextEditingController();
   final deliveryController = TextEditingController();
   final msgController = TextEditingController();
-  late MyDropDown zoneDropDown = MyDropDown(myList: const ["Select a zone"], selected: "Select a zone");
-  late MyDropDown vehicleDropDown = MyDropDown(myList: const ["Select a vehicle"], selected: "Select a vehicle");
+  late MyDropDown zoneDropDown =
+      MyDropDown(myList: const ["Select a zone"], selected: "Select a zone");
+  late MyDropDown vehicleDropDown = MyDropDown(
+      myList: const ["Select a vehicle"], selected: "Select a vehicle");
   late PlacesAutocompleteInput originAutocomplete;
   late PlacesAutocompleteInput destAutocomplete;
   Map<String, int> zoneMap = {};
   Map<String, int> vehicleMap = {};
   Cart myCart = Cart();
-  String sessionToken = const Uuid().v4();
-  late PlaceApiProvider googlePlaces;
+  late PlaceApiProvider apiProvider;
 
   @override
   void initState() {
     super.initState();
-    originAutocomplete = PlacesAutocompleteInput(sessionToken: sessionToken);
-    destAutocomplete = PlacesAutocompleteInput(sessionToken: sessionToken);
-    googlePlaces = PlaceApiProvider(sessionToken);
+    apiProvider = PlaceApiProvider();
+    originAutocomplete = PlacesAutocompleteInput(
+      apiProvider: apiProvider,
+    );
+    destAutocomplete = PlacesAutocompleteInput(
+      apiProvider: apiProvider,
+    );
+  }
+
+  @override
+  void dispose(){
+    super.dispose();
+    cNameController.dispose();
+    phoneController.dispose();
+    cPropertyController.dispose();
+    collectController.dispose();
+    deliveryController.dispose();
+    msgController.dispose();
   }
 
   Future<List<dynamic>> getZones() async {
@@ -48,7 +64,7 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
     List<dynamic> zone = [];
     zoneMap.clear();
     for (var z in data) {
-      if(!zone.contains(z["zone"])) {
+      if (!zone.contains(z["zone"])) {
         zone.add(z["zone"]);
         zoneMap.addAll({z["zone"]: z["id"]});
       }
@@ -79,15 +95,15 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
             const DeliveryDetailsInputTitle(textTitle: "Phone"),
             DeliveryDetailsInput(textEditingController: phoneController),
             const DeliveryDetailsInputTitle(textTitle: "Origin"),
-            PlacesAutocompleteInput(sessionToken: sessionToken),
+            originAutocomplete,
             const DeliveryDetailsInputTitle(textTitle: "Destination"),
-            PlacesAutocompleteInput(sessionToken: sessionToken),
+            destAutocomplete,
             const DeliveryDetailsInputTitle(textTitle: "Customer Property No."),
             DeliveryDetailsInput(textEditingController: cPropertyController),
             const DeliveryDetailsInputTitle(textTitle: "Collection Time"),
-            DeliveryDetailsInput(textEditingController: collectController),
+            MyTimePicker(textEditingController: collectController),
             const DeliveryDetailsInputTitle(textTitle: "Delivery Time"),
-            DeliveryDetailsInput(textEditingController: deliveryController),
+            MyTimePicker(textEditingController: deliveryController),
             const DeliveryDetailsInputTitle(textTitle: "Zone"),
             FutureBuilder(
                 future: getZones(),
@@ -279,21 +295,36 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
                     child: SizedBox(
                         width: MediaQuery.of(context).size.width * 0.6,
                         child: ElevatedButton(
-                          onPressed: () {
-                            googlePlaces.getCoordinates(originAutocomplete.);
-                            // MyApiService.placeOrder(
-                            //     cNameController.text,
-                            //     phoneController.text,
-                            //     originAutocomplete.selected,
-                            //     destAutocomplete.selected,
-                            //     cPropertyController.text,
-                            //     collectController.text,
-                            //     deliveryController.text,
-                            //     zoneMap[zoneDropDown.selected]!,
-                            //     vehicleMap[vehicleDropDown.selected]!,
-                            //     msgController.text,
-                            //     "",
-                            //     "");
+                          onPressed: () async {
+                            String originId = apiProvider.findPlaceIdByDesc(originAutocomplete.selected);
+                            String destId = apiProvider.findPlaceIdByDesc(destAutocomplete.selected);
+
+                            await apiProvider.getCoordinates(originId).then((originCoor) async{
+                              await apiProvider.getCoordinates(destId).then((destCoor) async{
+
+                                String originCoordinate = "${originCoor["lat"]},${originCoor["lng"]}";
+                                String destCoordinate = "${destCoor["lat"]},${destCoor["lng"]}";
+                                await apiProvider.getDistance(destId, originId).then((distance) {
+
+                                  MyApiService.placeOrder(
+                                      cNameController.text,
+                                      phoneController.text,
+                                      originAutocomplete.selected,
+                                      destAutocomplete.selected,
+                                      cPropertyController.text,
+                                      collectController.text,
+                                      deliveryController.text,
+                                      zoneMap[zoneDropDown.selected]!,
+                                      vehicleMap[vehicleDropDown.selected]!,
+                                      msgController.text,
+                                      originCoordinate,
+                                      destCoordinate,
+                                      distance);
+
+                                });
+                              });
+                            });
+
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFFB09A73),

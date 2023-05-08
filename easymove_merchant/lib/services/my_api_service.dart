@@ -93,14 +93,13 @@ class MyApiService {
     return data["zone"];
   }
 
-  static Future<void> getOrder(int id) async {
+  static Future<List<dynamic>> getOrder(int id) async {
     String apiEndpoint = "$url/merchant_order.php";
     Map<String, dynamic> body = {};
     body["id"] = "$id";
     final response = await http.post(Uri.parse(apiEndpoint), body: body);
     final data = json.decode(response.body);
-    print(id);
-    print(data);
+    return data["orders"]["orders"];
   }
 
   static Future<dynamic> getTrip() async {
@@ -139,7 +138,7 @@ class MyApiService {
 
   static Future<void> placeOrder(String cName, String phone, String origin, String destination,
       String cProperty, String collect, String delivery, int zone, int vehicle, String message,
-      String originCoor, String destCoor) async {
+      String originCoor, String destCoor, double distance) async {
     String apiEndpoint = "$url/place_order.php";
     Map<String, dynamic> body = {};
     body['customer_name'] = cName;
@@ -158,7 +157,7 @@ class MyApiService {
     body['merchant'] = merchant.id;
     body['sendfrom_coordinate'] = originCoor;
     body['sendto_coordinate'] = destCoor;
-    body['distance'] = 2.8;
+    body['distance'] = distance;
     FormData formData = FormData.fromMap(body);
     final response = await Dio().post(apiEndpoint, data: formData);
     final data = json.decode(response.toString());
@@ -182,17 +181,15 @@ class MyApiService {
         body: body
     );
 
-    if (response.statusCode == 200) {
-      Map<String, dynamic> data = json.decode(response.body);
-      if(data.containsKey("notifications")) {
-        List<Map<String, dynamic>> notifications = data["notifications"];
-        return notifications;
-      }else{
-        return [{"result":false}];
-      }
-    } else {
+    Map<String, dynamic> data = json.decode(response.body);
+
+    if(data["result"] == true) {
+      List<Map<String, dynamic>> notifications = data["notifications"];
+      return notifications;
+    }else{
       return [{"result":false}];
     }
+
   }
 
   static Future<void> forgotPassword(String email) async {

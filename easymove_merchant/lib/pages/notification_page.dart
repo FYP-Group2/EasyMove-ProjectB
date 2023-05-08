@@ -22,6 +22,7 @@ class NotificationPage extends StatefulWidget {
 
 class NotificationPageState extends State<NotificationPage> {
   late Future<List<Map<String, dynamic>>>? futureNotification;
+  bool cancelTimer = false;
 
   @override
   void initState() {
@@ -30,8 +31,17 @@ class NotificationPageState extends State<NotificationPage> {
     setUpTimedFetch();
   }
 
+  @override
+  void dispose(){
+    super.dispose();
+    cancelTimer = true;
+  }
+
   setUpTimedFetch() {
     Timer.periodic(const Duration(milliseconds: 5000), (timer) {
+      if(cancelTimer){
+        timer.cancel();
+      }
       setState(() {
         futureNotification = MyApiService.fetchNoti(merchant.id, year, month);
       });
