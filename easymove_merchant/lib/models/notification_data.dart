@@ -10,7 +10,7 @@ class NotificationData {
     title = json['title'];
     message = json['message'];
     date = json['created'];
-    id = json['id'];
+    id = json['id'].toString();
   }
 
   Map<String, dynamic> toJson() {

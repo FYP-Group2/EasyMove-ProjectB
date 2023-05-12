@@ -34,24 +34,24 @@ class _ProductListState extends StatelessWidget {
 
       for (var p in product) {
         productList.add(Product(
-            subcatId: int.parse(p["subcat_id"]),
+            subcatId: int.parse(p["subcat_id"].toString()),
             name: p["product_name"],
             imageSource: p["photo1"],
             // type: "Ala Carte",
-            price: double.parse(p["price"])));
+            price: double.parse(p["price"].toString())));
       }
 
       for (var s in subCat) {
         List<Product> subcatProduct = [];
         for (var p in productList) {
-          if (p.subcatId == int.parse(s["subcat_id"])) {
+          if (p.subcatId == int.parse(s["subcat_id"].toString())) {
             subcatProduct.add(p);
           }
         }
 
         subCategoryList.add(SubCategory(
-            id: int.parse(s["subcat_id"]),
-            maincatId: int.parse(s["maincat_id"]),
+            id: int.parse(s["subcat_id"].toString()),
+            maincatId: int.parse(s["maincat_id"].toString()),
             name: s["subcat_name"],
             products: subcatProduct));
       }
@@ -60,14 +60,14 @@ class _ProductListState extends StatelessWidget {
         List<SubCategory> maincatSubcat = [];
         List<Product> maincatProduct = [];
         for (var s in subCategoryList) {
-          if (s.maincatId == int.parse(m["maincat_id"])) {
+          if (s.maincatId == int.parse(m["maincat_id"].toString())) {
             maincatSubcat.add(s);
             maincatProduct.addAll(s.products);
           }
         }
 
         categoryList.add(Category(
-            id: int.parse(m["maincat_id"]),
+            id: int.parse(m["maincat_id"].toString()),
             name: m["maincat_name"],
             subCategories: maincatSubcat,
             allProducts: maincatProduct));

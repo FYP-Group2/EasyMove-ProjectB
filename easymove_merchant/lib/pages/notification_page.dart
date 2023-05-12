@@ -21,7 +21,7 @@ class NotificationPage extends StatefulWidget {
 }
 
 class NotificationPageState extends State<NotificationPage> {
-  late Future<List<Map<String, dynamic>>>? futureNotification;
+  late Future<List<dynamic>>? futureNotification;
   bool cancelTimer = false;
 
   @override
@@ -67,11 +67,11 @@ class NotificationPageState extends State<NotificationPage> {
 
   Widget NotificationList() {
     return Center(
-      child: FutureBuilder<List<Map<String, dynamic>>>(
+      child: FutureBuilder<List<dynamic>>(
         future: futureNotification,
         builder: (BuildContext context, AsyncSnapshot snapshot) {
           if (snapshot.hasData) {
-            List<Map<String, dynamic>> data = snapshot.data;
+            List<dynamic> data = snapshot.data;
             List<NotificationData> notificationData = data.map((e) =>
                 NotificationData.fromJson(e)).toList();
             return ListView.separated(

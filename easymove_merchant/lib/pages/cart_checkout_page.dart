@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:easymove_merchant/components/my_app_bar.dart';
 import 'package:easymove_merchant/components/my_bottom_navigation_bar.dart';
 import 'package:easymove_merchant/components/delivery_details_input.dart';
@@ -7,6 +9,9 @@ import 'package:easymove_merchant/components/my_time_picker.dart';
 import 'package:easymove_merchant/components/trip_table.dart';
 import 'package:easymove_merchant/components/places_autocomplete_input.dart';
 import 'package:easymove_merchant/models/cart.dart';
+import 'package:easymove_merchant/models/product.dart';
+import 'package:easymove_merchant/pages/cart_page.dart';
+import 'package:easymove_merchant/pages/info_page.dart';
 import 'package:easymove_merchant/services/my_api_service.dart';
 import 'package:easymove_merchant/services/google_places_service.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +34,8 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
       MyDropDown(myList: const ["Select a zone"], selected: "Select a zone");
   late MyDropDown vehicleDropDown = MyDropDown(
       myList: const ["Select a vehicle"], selected: "Select a vehicle");
+  late MyDropDown itemSizeDropDown = MyDropDown(
+      myList: const ["Select an item size"], selected: "Select an item size");
   late PlacesAutocompleteInput originAutocomplete;
   late PlacesAutocompleteInput destAutocomplete;
   Map<String, int> zoneMap = {};
@@ -76,6 +83,15 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
     List<dynamic> data = await MyApiService.getVehicles();
     vehicleMap = data[0];
     return data[1];
+  }
+
+  Future<List<dynamic>> getItemSize() async {
+    List<dynamic> data = await MyApiService.getItemSize();
+    List<dynamic> itemSize = [];
+    for(var d in data){
+      itemSize.add(d["item_size"]);
+    }
+    return itemSize;
   }
 
   @override
@@ -128,6 +144,36 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
                           ),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(10)),
+                        ),
+                        child: const Text("Loading..."),
+                      ),
+                    );
+                  }
+                })),
+            const DeliveryDetailsInputTitle(textTitle: "Item Size"),
+            FutureBuilder(
+                future: getItemSize(),
+                builder: ((context, snapshot) {
+                  if (snapshot.hasData) {
+                    List<dynamic> dataList = ["Select an item size"];
+                    for (var d in snapshot.data!) {
+                      if (!dataList.contains(d)) {
+                        dataList.add(d);
+                      }
+                    }
+                    itemSizeDropDown.myList = dataList;
+                    return itemSizeDropDown;
+                  } else {
+                    return Padding(
+                      padding: const EdgeInsets.only(
+                          top: 5, left: 30, right: 30, bottom: 25),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                            color: Colors.grey,
+                          ),
+                          borderRadius:
+                          const BorderRadius.all(Radius.circular(10)),
                         ),
                         child: const Text("Loading..."),
                       ),
@@ -304,22 +350,76 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
 
                                 String originCoordinate = "${originCoor["lat"]},${originCoor["lng"]}";
                                 String destCoordinate = "${destCoor["lat"]},${destCoor["lng"]}";
-                                await apiProvider.getDistance(destId, originId).then((distance) {
+                                await apiProvider.getDistance(destId, originId).then((distance) async{
 
-                                  MyApiService.placeOrder(
-                                      cNameController.text,
-                                      phoneController.text,
-                                      originAutocomplete.selected,
-                                      destAutocomplete.selected,
-                                      cPropertyController.text,
-                                      collectController.text,
-                                      deliveryController.text,
-                                      zoneMap[zoneDropDown.selected]!,
-                                      vehicleMap[vehicleDropDown.selected]!,
-                                      msgController.text,
-                                      originCoordinate,
-                                      destCoordinate,
-                                      distance);
+                                  String orderDetail = "";
+                                  for(Product p in myCart.products){
+                                    orderDetail += "${p.name},${myCart.productsAmount[p.name]}";
+                                  }
+
+                                  print("-----$originCoordinate");
+                                  print("-----$destCoordinate");
+                                  print("-----${originAutocomplete.selected}");
+                                  print("-----${destAutocomplete.selected}");
+                                  print("-----$orderDetail");
+
+                                  await MyApiService.placeOrder(
+                                    cNameController.text,
+                                    phoneController.text,
+                                    originAutocomplete.selected,
+                                    destAutocomplete.selected,
+                                    cPropertyController.text,
+                                    collectController.text,
+                                    deliveryController.text,
+                                    zoneMap[zoneDropDown.selected]!,
+                                    itemSizeDropDown.selected,
+                                    vehicleMap[vehicleDropDown.selected]!,
+                                    msgController.text,
+                                    originCoordinate,
+                                    destCoordinate,
+                                    distance,
+                                    orderDetail).then((result) {
+
+                                      if(result["result"] == true){
+                                        myCart.clear();
+                                        Navigator.of(context).push(PageRouteBuilder(
+                                            opaque: false,
+                                            pageBuilder: (BuildContext context, _, __) =>
+                                            const InfoPage(
+                                                titleText: "Place order successful",
+                                                displayText:
+                                                "Please check your order at home page or the website. You will receive notification "
+                                                "upon change of order status.",
+                                                pageRoute: CartPage())));
+                                      }else{
+                                        showDialog(
+                                            context: context,
+                                            builder: (context) {
+                                              return AlertDialog(
+                                                  shape: RoundedRectangleBorder(
+                                                      borderRadius:
+                                                      BorderRadius.circular(8)),
+                                                  title: const Text("Place order failed"),
+                                                  content: Text("${result["errors"]}"),
+                                                  actions: [
+                                                    TextButton(
+                                                      onPressed: () {
+                                                        Navigator.of(context).pop(false);
+                                                        setState(() {});
+                                                      },
+                                                      child: const Text(
+                                                        "Ok",
+                                                        style: TextStyle(
+                                                          fontSize: 20,
+                                                          color: Color(0xFFB09A73),
+                                                        ),
+                                                      ),
+                                                    ),
+                                                  ]);
+                                            });
+                                      }
+
+                                  });
 
                                 });
                               });

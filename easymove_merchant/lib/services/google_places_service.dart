@@ -48,7 +48,7 @@ class PlaceApiProvider {
     if (response.statusCode == 200) {
       final result = json.decode(response.body);
       print("-----GET COORDINATE-----\n${result["result"]["geometry"]["location"]}");
-      return result;
+      return result["result"]["geometry"]["location"];
     } else {
       throw Exception('Failed to fetch suggestion');
     }
