@@ -124,7 +124,8 @@ class _ProductListState extends StatelessWidget {
                                                 .name,
                                             style: const TextStyle(
                                                 fontSize: 18,
-                                                color: Color.fromRGBO(100, 100, 100, 1),
+                                                color: Color.fromRGBO(
+                                                    100, 100, 100, 1),
                                                 fontWeight: FontWeight.bold),
                                           ),
                                           onTap: () {
@@ -157,52 +158,50 @@ class _ProductListState extends StatelessWidget {
       appBar: PreferredSize(
         preferredSize: const Size.fromHeight(90),
         child:
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                color: Colors.white,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const Padding(
-                        padding: EdgeInsets.only(bottom: 4, left: 20),
-                        child: Text(
-                          "Menu",
-                          style: TextStyle(fontSize: 28),
-                        )),
-                    Padding(
-                      padding: const EdgeInsets.only(left: 20, bottom: 30),
-                      child: Container(
-                        decoration: const BoxDecoration(
-                          color: Color(0xFF6FB7CE),
-                          borderRadius: BorderRadius.all(Radius.circular(30.0)),
-                          boxShadow: [
-                            BoxShadow(
-                                color: Color.fromRGBO(111, 199, 206, 0.7),
-                                offset: Offset(-2, 4),
-                                spreadRadius: 2,
-                                blurRadius: 5),
-                          ],
-                        ),
-                        width: 50,
-                        height: 5,
-                      ),
+            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+          Container(
+            color: Colors.white,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Padding(
+                    padding: EdgeInsets.only(bottom: 4, left: 20),
+                    child: Text(
+                      "Menu",
+                      style: TextStyle(fontSize: 28),
+                    )),
+                Padding(
+                  padding: const EdgeInsets.only(left: 20, bottom: 30),
+                  child: Container(
+                    decoration: const BoxDecoration(
+                      color: Color(0xFF6FB7CE),
+                      borderRadius: BorderRadius.all(Radius.circular(30.0)),
+                      boxShadow: [
+                        BoxShadow(
+                            color: Color.fromRGBO(111, 199, 206, 0.7),
+                            offset: Offset(-2, 4),
+                            spreadRadius: 2,
+                            blurRadius: 5),
+                      ],
                     ),
-                  ],
+                    width: 50,
+                    height: 5,
+                  ),
                 ),
-              ),
-              Builder(
-                builder: ((context) => Padding(
-                    padding: const EdgeInsets.only(top: 40),
-                    child: IconButton(
-                      icon: const Icon(Icons.menu_book),
-                      onPressed: () => Scaffold.of(context).openEndDrawer(),
-                      tooltip:
-                          MaterialLocalizations.of(context).openAppDrawerTooltip,
-                    ))),
-              ),
+              ],
+            ),
+          ),
+          Builder(
+            builder: ((context) => Padding(
+                padding: const EdgeInsets.only(top: 40),
+                child: IconButton(
+                  icon: const Icon(Icons.menu_book),
+                  onPressed: () => Scaffold.of(context).openEndDrawer(),
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                ))),
+          ),
         ]),
       ),
       body: FutureBuilder(

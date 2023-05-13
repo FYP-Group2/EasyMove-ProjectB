@@ -3,8 +3,8 @@ import 'package:easymove_merchant/models/merchant.dart';
 import 'package:http/http.dart' as http;
 import 'package:dio/dio.dart';
 
-const String url = "http://awcgroup.com.my/easymovenpick.com/api";
 const String merchantUrl = "http://awcgroup.com.my/merchant_store/api";
+const String url = "http://awcgroup.com.my/easymovenpick.com/api";
 
 class MyApiService {
   static Merchant merchant = Merchant();
@@ -120,7 +120,8 @@ class MyApiService {
 
   // id, maincat_id, subcat_id, product_name, price, photo1, status, view, available
   static Future<List<dynamic>> getProducts() async {
-    String apiEndpoint = "$merchantUrl/menu_details.php";
+    String apiEndpoint = "$url/product/menu_details.php";
+    //String apiEndpoint = "$merchantUrl/menu_details.php";
     Map<String, int> body = {};
     body["mid"] = merchant.id;
     FormData formData = FormData.fromMap(body);
@@ -131,7 +132,8 @@ class MyApiService {
 
   // maincat_id, maincat_name, position
   static Future<List<dynamic>> getMaincat() async {
-    String apiEndpoint = "$merchantUrl/maincat_details.php";
+    String apiEndpoint = "$url/category/maincat_details.php";
+    //String apiEndpoint = "$merchantUrl/maincat_details.php";
     Map<String, int> body = {};
     body["mid"] = merchant.id;
     FormData formData = FormData.fromMap(body);
@@ -142,13 +144,14 @@ class MyApiService {
 
   // subcat_id, maincat_id, subcat_name, position
   static Future<List<dynamic>> getSubcat() async {
-    String apiEndpoint = "$merchantUrl/subcat_details.php";
+    String apiEndpoint = "$url/category/subcat_details.php";
+    //String apiEndpoint = "$merchantUrl/subcat_details.php";
     Map<String, int> body = {};
     body["mid"] = merchant.id;
     FormData formData = FormData.fromMap(body);
     final response = await Dio().post(apiEndpoint, data: formData);
     Map<String, dynamic> data = json.decode(response.toString());
-    return data["maincat"];
+    return data["subcat"];
   }
 
   static Future<Map<String, dynamic>> placeOrder(String cName, String phone, String origin, String destination,
