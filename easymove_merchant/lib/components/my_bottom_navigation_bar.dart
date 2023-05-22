@@ -100,7 +100,7 @@ class MyBottomNavigationBarState extends State<MyBottomNavigationBar> {
                       Icons.notifications_none_outlined,
                       size: 40,
                     ),
-                    label: 'Account',
+                    label: 'Notification',
                   ),
                 ],
               ),
