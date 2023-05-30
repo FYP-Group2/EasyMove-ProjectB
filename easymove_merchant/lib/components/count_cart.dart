@@ -21,6 +21,7 @@ class _CartCountState extends State<CartCount> {
     super.initState();
     if (myCart.productsAmount.containsKey(widget.product.name)) {
       _counter = myCart.productsAmount[widget.product.name]!;
+      add_amount = true;
     }
   }
 
@@ -33,6 +34,9 @@ class _CartCountState extends State<CartCount> {
 
   void _decreaseCounter() {
     setState(() {
+      if(_counter == 1){
+        add_amount = false;
+      }
       myCart.removeProduct(widget.product);
       _counter--;
     });
@@ -105,6 +109,7 @@ class _CartCountState extends State<CartCount> {
             child: TextButton(
               onPressed: () {
                 setState(() {
+                  _increaseCounter();
                   add_amount = true;
                 });
               },

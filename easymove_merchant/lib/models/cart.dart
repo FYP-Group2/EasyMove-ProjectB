@@ -12,7 +12,13 @@ class Cart {
   }
 
   void addProduct(Product product){
-    if(!products.contains(product)) {
+    bool hasProduct = false;
+    for(Product p in products){
+      if(p.name == product.name){
+        hasProduct = true;
+      }
+    }
+    if(!hasProduct) {
       products.add(product);
       productsAmount.addAll({product.name: 1});
     }else{
@@ -27,7 +33,7 @@ class Cart {
       productsAmount[product.name] = productsAmount[product.name]! - 1;
     }else {
       productsAmount.remove(product.name);
-      products.remove(product);
+      products.removeWhere((element) => element.name == product.name);
     }
   }
 
@@ -46,8 +52,10 @@ class Cart {
 
   double getTotalPrice(){
     double totalPrice = 0;
-    for(var p in products){
-      totalPrice += productsAmount[p.name]! * p.price;
+    for (var p in products) {
+      if(productsAmount[p.name] != null){
+        totalPrice += productsAmount[p.name]! * p.price;
+      }
     }
 
     return totalPrice;

@@ -54,12 +54,8 @@ class CartState extends State<CartPage> {
                                 base64Decode(
                                     myCart.products[index].imageSource),
                                 fit: BoxFit.fill,
+                                gaplessPlayback: true,
                               ),
-                              // child: Image.memory(
-                              //   base64Decode(myCart.products[index].imageSource),
-                              //   width: imageWidth.toDouble(),
-                              //   height: imageHeight.toDouble(),
-                              // ),
                             ))),
                     // Displaying name, unit price, and quantity (second column)
                     SizedBox(

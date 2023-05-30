@@ -354,14 +354,8 @@ class CartCheckoutPageState extends State<CartCheckoutPage> {
 
                                   String orderDetail = "";
                                   for(Product p in myCart.products){
-                                    orderDetail += "${p.name},${myCart.productsAmount[p.name]}";
+                                    orderDetail += "${myCart.productsAmount[p.name]}x ${p.name};";
                                   }
-
-                                  print("-----$originCoordinate");
-                                  print("-----$destCoordinate");
-                                  print("-----${originAutocomplete.selected}");
-                                  print("-----${destAutocomplete.selected}");
-                                  print("-----$orderDetail");
 
                                   await MyApiService.placeOrder(
                                     cNameController.text,

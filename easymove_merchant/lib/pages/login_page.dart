@@ -18,6 +18,7 @@ class _LoginPageState extends State<LoginPage> {
   final _lemailController = TextEditingController();
   final _lpasswordController = TextEditingController();
   final _remailController = TextEditingController();
+  bool _passwordVisible = false;
   Merchant merchant = Merchant();
 
   void autoLogin() async {
@@ -222,10 +223,22 @@ class _LoginPageState extends State<LoginPage> {
                                   color: Colors.white),
                               child: TextFormField(
                                 controller: _lpasswordController,
-                                decoration: const InputDecoration(
-                                    label: Text("Password"),
+                                obscureText: !_passwordVisible,
+                                decoration: InputDecoration(
+                                    label: const Text("Password"),
+                                    suffixIcon: IconButton(
+                                        onPressed: (){
+                                          setState(() {
+                                            _passwordVisible = !_passwordVisible;
+                                          });
+                                        },
+                                        icon: Icon (
+                                            _passwordVisible
+                                                ? Icons.visibility
+                                                : Icons.visibility_off
+                                        )),
                                     border: InputBorder.none,
-                                    contentPadding: EdgeInsets.all(16.0)),
+                                    contentPadding: const EdgeInsets.all(16.0)),
                                 validator: (value) {
                                   if (value == null || value.isEmpty) {
                                     return 'Please enter password';
